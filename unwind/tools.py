@@ -160,12 +160,15 @@ class UnwindTools:
     async def _undo(self, args: dict[str, Any]) -> dict[str, Any]:
         cp = args.get("to_checkpoint")
         if cp is not None and cp in self._checkpoints:
-            # Undo everything logged after the checkpoint head.
-            head_ts = self._checkpoints[cp]["ts"]
+            # Undo everything logged *after* the checkpoint, identified by entry
+            # id rather than timestamp — coarse clocks (e.g. Windows' ~15ms
+            # time.time()) can give an action the same ts as the checkpoint, so a
+            # ts comparison would silently miss it. Identity is exact.
+            baseline: set[str] = set(self._checkpoints[cp].get("head_ids", []))
             entries = [
                 e
                 for e in self.engine.log.undoable(session_id=self.engine.session_id)
-                if e.ts > head_ts
+                if e.id not in baseline
             ]
             outcomes = [await self.engine.undo_entry(e.id) for e in entries]
         else:
@@ -194,14 +197,20 @@ class UnwindTools:
     def _checkpoint(self, args: dict[str, Any]) -> dict[str, Any]:
         cp_id = "cp_" + uuid.uuid4().hex[:8]
         head = self.engine.log.undoable(session_id=self.engine.session_id)
-        marker = {
+        # Record the ids undoable *now*; undo-to-checkpoint reverses everything
+        # logged after this point (anything not in this set). Identity-based so
+        # it is robust to clock resolution.
+        marker: dict[str, Any] = {
             "checkpoint_id": cp_id,
             "label": args.get("label", cp_id),
             "ts": now_ts(),
             "head_entry_id": head[0].id if head else None,
+            "head_ids": [e.id for e in head],
         }
         self._checkpoints[cp_id] = marker
-        return {"isError": False, "structured": marker, "content": [marker]}
+        # Don't echo the internal id list back to the agent — keep the surface clean.
+        public = {k: v for k, v in marker.items() if k != "head_ids"}
+        return {"isError": False, "structured": public, "content": [public]}
 
 
 def build_fastmcp(engine: ReversibilityEngine) -> Any:

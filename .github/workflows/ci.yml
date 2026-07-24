@@ -105,7 +105,9 @@ jobs:
       - name: Protocol-conformance suite
         # Non-negotiable: a proxy that breaks a client is worthless.
         # Any method Unwind does not understand must be forwarded byte-faithfully.
-        run: pytest -m protocol -ra
+        # Scope to the conformance dir so collection doesn't touch numpy-dependent
+        # eval/bench modules (this job installs only the base dev extra).
+        run: pytest tests/protocol_conformance -m protocol -ra
 
   ts:
     name: TypeScript shim (node 22)

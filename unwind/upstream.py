@@ -20,6 +20,36 @@ from typing import Any, Protocol, runtime_checkable
 
 from unwind.types import ToolSpec
 
+# Common runners that wrap the *actual* server as an argument. When the command
+# is one of these, the meaningful server name is the first package/path argument.
+_RUNNERS = frozenset(
+    {"npx", "uvx", "uv", "python", "python3", "node", "deno", "bunx", "bun", "pipx"}
+)
+_RUNNER_FLAGS = frozenset({"-y", "--yes", "-q", "--quiet", "run", "-m", "exec", "x", "--"})
+
+
+def _infer_server_name(command: str, args: list[str]) -> str:
+    """Derive a human-friendly server name, seeing through runners like npx/uvx.
+
+    ``npx -y @modelcontextprotocol/server-filesystem /path`` → ``server-filesystem``
+    so logs, history, and the reversibility index read meaningfully rather than
+    showing the runner ("npx").
+    """
+    base = command.rsplit("/", 1)[-1]
+    if base not in _RUNNERS:
+        return base
+    for arg in args:
+        if arg in _RUNNER_FLAGS or arg.startswith("-"):
+            continue
+        # Last path segment of the package/entrypoint, e.g.
+        #   @modelcontextprotocol/server-filesystem@0.5.0 -> server-filesystem
+        leaf = arg.rstrip("/").rsplit("/", 1)[-1]
+        # Strip a trailing version pin (leaf may itself start with '@' if unscoped).
+        if "@" in leaf[1:]:
+            leaf = leaf[0] + leaf[1:].split("@", 1)[0]
+        return leaf or base
+    return base
+
 
 @runtime_checkable
 class Upstream(Protocol):
@@ -49,7 +79,7 @@ class McpUpstream:
         self.command = command
         self.args = args or []
         self.env = env
-        self.server_name = name or command.rsplit("/", 1)[-1]
+        self.server_name = name or _infer_server_name(command, self.args)
         self._stack: AsyncExitStack | None = None
         self._session: Any = None
 

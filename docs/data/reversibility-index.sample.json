@@ -1,0 +1,142 @@
+[
+  {
+    "server": "server-filesystem",
+    "tool": "read_file",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "read_text_file",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "read_media_file",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "read_multiple_files",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "write_file",
+    "class": "R1",
+    "label": "self-reversible",
+    "verb": "update",
+    "can_undo": true,
+    "fidelity": "exact",
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "edit_file",
+    "class": "R1",
+    "label": "self-reversible",
+    "verb": "update",
+    "can_undo": true,
+    "fidelity": "exact",
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "create_directory",
+    "class": "R3",
+    "label": "mitigable-only",
+    "verb": "create",
+    "can_undo": false,
+    "fidelity": "failed",
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "list_directory",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "list_directory_with_sizes",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "directory_tree",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "move_file",
+    "class": "R3",
+    "label": "mitigable-only",
+    "verb": "move",
+    "can_undo": false,
+    "fidelity": "failed",
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "search_files",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "get_file_info",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  },
+  {
+    "server": "server-filesystem",
+    "tool": "list_allowed_directories",
+    "class": "R0",
+    "label": "nullipotent",
+    "verb": "read",
+    "can_undo": false,
+    "fidelity": null,
+    "half_life_s": null
+  }
+]
