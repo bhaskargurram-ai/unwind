@@ -1,0 +1,37 @@
+{
+  "projectName": "unwind",
+  "projectOwner": "bhaskargurram-ai",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md",
+    "AUTHORS.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "angular",
+  "commitType": "docs",
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": false,
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/github/all-contributors/bhaskargurram-ai/unwind?color=ee8449)](#contributors)",
+  "contributors": [
+    {
+      "login": "bhaskargurram-ai",
+      "name": "Bhaskar Gurram",
+      "avatar_url": "https://avatars.githubusercontent.com/bhaskargurram-ai",
+      "profile": "https://github.com/bhaskargurram-ai",
+      "contributions": [
+        "code",
+        "doc",
+        "design",
+        "ideas",
+        "infra",
+        "maintenance",
+        "research",
+        "test"
+      ]
+    }
+  ],
+  "skipCi": true,
+  "types": {}
+}

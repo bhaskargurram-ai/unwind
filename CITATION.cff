@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use Unwind or ReversiBench in your research, please cite it as below."
+title: "Unwind: A Reversibility Layer for Agentic Tool Use"
+abstract: >-
+  Unwind is a transparent Model Context Protocol (MCP) proxy that infers which
+  agent tool calls are reversible (an ordinal R0-R4 taxonomy, assigned relative
+  to the environment), synthesises inverse operations, maintains a durable
+  cross-server undo log, and interrupts the human only for genuinely
+  irreversible actions. Reversibility inference is the missing primitive that
+  makes human oversight of agents sustainable by turning undifferentiated
+  approval prompts into a meaningful signal.
+type: software
+authors:
+  - family-names: Gurram
+    given-names: Bhaskar
+    email: bhaskar@zasti.ai
+    affiliation: Zasti
+repository-code: "https://github.com/bhaskargurram-ai/unwind"
+url: "https://bhaskargurram-ai.github.io/unwind/"
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-07-23"
+keywords:
+  - model-context-protocol
+  - mcp
+  - ai-agents
+  - agent-safety
+  - reversibility
+  - compensation
+  - undo
+  - human-in-the-loop
+  - selective-prediction
+preferred-citation:
+  type: article
+  title: "Unwind: Reversibility Inference and Compensation Synthesis for Agentic Tool Use"
+  authors:
+    - family-names: Gurram
+      given-names: Bhaskar
+      email: bhaskar@zasti.ai
+      affiliation: Zasti
+  year: 2026
+  # arXiv identifier — TBD, filled in on preprint release.
+  # url: "https://arxiv.org/abs/TBD"
+  # doi: TBD
+  notes: "arXiv preprint. arXiv ID and DOI are TBD and will be added on release."

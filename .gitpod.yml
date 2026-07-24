@@ -1,0 +1,33 @@
+image: gitpod/workspace-python-3.11
+
+tasks:
+  - name: Setup
+    init: |
+      pip install --upgrade uv
+      uv venv --python 3.11
+      uv pip install -e ".[dev,docs,metrics]"
+      pre-commit install || true
+    command: |
+      source .venv/bin/activate 2>/dev/null || true
+      echo "Unwind dev environment ready. Try: make lint typecheck test conformance"
+
+  - name: TypeScript shim
+    init: |
+      cd ts && npm ci && npm run build
+    command: |
+      cd ts
+
+vscode:
+  extensions:
+    - ms-python.python
+    - charliermarsh.ruff
+    - tamasfe.even-better-toml
+
+github:
+  prebuilds:
+    master: true
+    branches: true
+    pullRequests: true
+    pullRequestsFromForks: true
+    addComment: false
+    addBadge: true

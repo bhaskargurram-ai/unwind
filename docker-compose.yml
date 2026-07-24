@@ -1,0 +1,73 @@
+# Unwind sandbox — the live servers used for integration and fidelity tests.
+#
+# Fidelity claims must come from real forward+inverse execution against real
+# servers (see PROJECT.md §8), never from model assertion. This compose file
+# brings up the backends the sandbox harness drives:
+#
+#   * filesystem — the reference MCP filesystem server over a scratch volume
+#   * git        — a git-backed working tree (write_file becomes R1 here)
+#   * sqlite     — a sqlite MCP server over a scratch database
+#   * mock-comms    — in-repo mock email/chat server (R3 territory)
+#   * mock-payments — in-repo mock payments server (R4 territory)
+#
+# The mock servers live under bench/sandbox/mock_servers/ and are owned by the
+# bench author; the paths/commands below are the agreed interface.
+#
+# Usage:  make sandbox-up   /   make sandbox-down
+
+name: unwind-sandbox
+
+services:
+  filesystem:
+    image: node:22-slim
+    working_dir: /work
+    command: >-
+      npx -y @modelcontextprotocol/server-filesystem /work
+    volumes:
+      - fs-data:/work
+    restart: unless-stopped
+
+  git:
+    image: python:3.11-slim
+    working_dir: /repo
+    # The git MCP server operates on a git-backed tree; init one on first boot.
+    command: >-
+      sh -c "apt-get update && apt-get install -y --no-install-recommends git &&
+             git config --global user.email sandbox@unwind.local &&
+             git config --global user.name 'Unwind Sandbox' &&
+             (test -d /repo/.git || git init /repo) &&
+             pip install --no-cache-dir mcp-server-git &&
+             python -m mcp_server_git --repository /repo"
+    volumes:
+      - git-data:/repo
+    restart: unless-stopped
+
+  sqlite:
+    image: python:3.11-slim
+    working_dir: /data
+    command: >-
+      sh -c "pip install --no-cache-dir mcp-server-sqlite &&
+             python -m mcp_server_sqlite --db-path /data/sandbox.db"
+    volumes:
+      - sqlite-data:/data
+    restart: unless-stopped
+
+  # --- In-repo mock servers (files owned by the bench author) --------------
+  mock-comms:
+    build:
+      context: .
+      dockerfile: bench/sandbox/mock_servers/comms/Dockerfile
+    # Expected entrypoint provided by bench/sandbox/mock_servers/comms/.
+    restart: unless-stopped
+
+  mock-payments:
+    build:
+      context: .
+      dockerfile: bench/sandbox/mock_servers/payments/Dockerfile
+    # Expected entrypoint provided by bench/sandbox/mock_servers/payments/.
+    restart: unless-stopped
+
+volumes:
+  fs-data:
+  git-data:
+  sqlite-data:

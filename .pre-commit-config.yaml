@@ -1,0 +1,74 @@
+# See https://pre-commit.com. Install with:  pre-commit install
+# Update pinned revs with:  pre-commit autoupdate
+
+# pre-commit.ci: auto-fix and auto-update hooks in PRs.
+ci:
+  autofix_commit_msg: "chore(pre-commit): auto-fix from hooks"
+  autofix_prs: true
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "chore(pre-commit): autoupdate hook versions"
+  autoupdate_schedule: weekly
+  skip: [no-paper-commits]  # local shell hook — not available on pre-commit.ci
+
+default_language_version:
+  python: python3.11
+
+repos:
+  # --- Ruff: lint only (isort/flake8 replacement). Formatting is Black's job,
+  #     so we do NOT enable ruff-format here — running both formatters would
+  #     ping-pong. Policy: Ruff lints, Black formats.
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        name: ruff (lint)
+        args: [--fix]
+
+  # --- Black: the formatter of record --------------------------------------
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+
+  # --- mypy --strict -------------------------------------------------------
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        args: [--strict]
+        files: ^unwind/
+        additional_dependencies:
+          - pydantic>=2.7
+
+  # --- Standard hygiene hooks ---------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+
+  # --- Local guard: never commit the gitignored paper/ tree ----------------
+  - repo: local
+    hooks:
+      - id: no-paper-commits
+        name: no-paper-commits (protect the gitignored paper/)
+        entry: >-
+          bash -c '
+          bad=$(printf "%s\n" "$@" | grep -E "^paper/" || true);
+          if [ -n "$bad" ]; then
+            echo "ERROR: refusing to commit paths under paper/ (it is gitignored):";
+            echo "$bad";
+            exit 1;
+          fi
+          ' --
+        language: system
+        pass_filenames: true
+        always_run: false

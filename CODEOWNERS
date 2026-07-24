@@ -1,0 +1,46 @@
+# CODEOWNERS — reviewers auto-requested when matching paths change.
+# Order matters: the LAST matching pattern wins. See
+# https://docs.github.com/en/repositories/managing-your-repositories-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo.
+*                       @bhaskargurram-ai
+
+# --- Area owners (mirror the labeler globs) -------------------------------
+
+# The transparent proxy — transparency is sacred; extra scrutiny here.
+/unwind/proxy/          @bhaskargurram-ai
+
+# Reversibility classification (lexical / schema / llm / environment / ensemble).
+/unwind/classify/       @bhaskargurram-ai
+
+# Compensation synthesis (effect typing, inverse search, prestate, plan, validate).
+/unwind/synthesize/     @bhaskargurram-ai
+
+# The durable, cross-server undo log.
+/unwind/undolog/        @bhaskargurram-ai
+
+# Escalation policy, damage-rate solver, calibration.
+/unwind/policy/         @bhaskargurram-ai
+/unwind/calibration/    @bhaskargurram-ai
+
+# ReversiBench: catalog, labeling, sandbox, scenarios.
+/bench/                 @bhaskargurram-ai
+
+# Metric harness.
+/eval/                  @bhaskargurram-ai
+
+# TypeScript stdio shim.
+/ts/                    @bhaskargurram-ai
+
+# CI/CD, security, and release automation.
+/.github/               @bhaskargurram-ai
+
+# Docs & community health.
+/docs/                  @bhaskargurram-ai
+*.md                    @bhaskargurram-ai
+
+# Build & packaging (project-critical; owner reviews all changes).
+/pyproject.toml         @bhaskargurram-ai
+/Dockerfile             @bhaskargurram-ai
+/docker-compose.yml     @bhaskargurram-ai
+/Makefile               @bhaskargurram-ai
