@@ -1,0 +1,13 @@
+# Source and tooling are not shipped; only dist/ + README + LICENSE (see the
+# package.json "files" allowlist, which this complements).
+src/
+test/
+tsconfig.json
+vitest.config.ts
+*.tsbuildinfo
+.editorconfig
+
+# Never ship dev artifacts.
+node_modules/
+coverage/
+*.log

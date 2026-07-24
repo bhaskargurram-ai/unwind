@@ -1,0 +1,66 @@
+{
+  "name": "unwind-mcp",
+  "version": "0.1.0",
+  "description": "Transparent MCP stdio proxy — a reversibility layer for agentic tool use. TypeScript port of the Unwind stdio shim.",
+  "type": "module",
+  "bin": {
+    "unwind-mcp": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "proxy",
+    "reversibility",
+    "undo",
+    "agent",
+    "agentic",
+    "unwind"
+  ],
+  "author": "Unwind contributors",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bhaskargurram-ai/unwind.git",
+    "directory": "ts"
+  },
+  "homepage": "https://github.com/bhaskargurram-ai/unwind#readme",
+  "bugs": {
+    "url": "https://github.com/bhaskargurram-ai/unwind/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "~5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
