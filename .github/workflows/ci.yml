@@ -87,7 +87,7 @@ jobs:
           fail_ci_if_error: false
         continue-on-error: true
 
-  protocol-conformance:
+  conformance:
     name: Protocol conformance (mandatory gate)
     runs-on: ubuntu-latest
     steps:
@@ -134,14 +134,14 @@ jobs:
   ci-success:
     name: CI success
     if: always()
-    needs: [lint, typecheck, test, protocol-conformance, ts]
+    needs: [lint, typecheck, test, conformance, ts]
     runs-on: ubuntu-latest
     steps:
       - name: Verify all required jobs passed
         env:
           RESULTS: >-
             ${{ needs.lint.result }} ${{ needs.typecheck.result }}
-            ${{ needs.test.result }} ${{ needs.protocol-conformance.result }}
+            ${{ needs.test.result }} ${{ needs.conformance.result }}
             ${{ needs.ts.result }}
         run: |
           echo "Required job results: $RESULTS"
