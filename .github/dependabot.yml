@@ -13,11 +13,11 @@ updates:
     labels:
       - "dependencies"
       - "python"
-    # One grouped PR per ecosystem (all update types) to avoid PR spam.
+    # Group only safe minor/patch bumps into one PR; MAJOR bumps come as their
+    # own reviewable PRs (they can break builds — e.g. mypy/ruff/pytest majors).
     groups:
-      python:
-        patterns:
-          - "*"
+      python-minor-patch:
+        update-types: ["minor", "patch"]
 
   # --- GitHub Actions ------------------------------------------------------
   - package-ecosystem: "github-actions"
@@ -32,9 +32,8 @@ updates:
       - "dependencies"
       - "area: ci"
     groups:
-      github-actions:
-        patterns:
-          - "*"
+      actions-minor-patch:
+        update-types: ["minor", "patch"]
 
   # --- npm (TypeScript shim) ----------------------------------------------
   - package-ecosystem: "npm"
@@ -50,6 +49,5 @@ updates:
       - "dependencies"
       - "area: ts"
     groups:
-      npm:
-        patterns:
-          - "*"
+      npm-minor-patch:
+        update-types: ["minor", "patch"]

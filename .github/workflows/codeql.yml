@@ -20,6 +20,10 @@ jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
+    # Code-scanning SARIF upload needs a public repo (or GitHub Advanced
+    # Security). Skip while private so it doesn't post red failures pre-launch;
+    # auto-activates at launch when the repo goes public.
+    if: github.event.repository.visibility == 'public'
     permissions:
       # Required to upload results to the Security tab.
       security-events: write
