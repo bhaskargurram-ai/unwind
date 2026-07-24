@@ -21,10 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Set up uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
       - name: Install dev dependencies
         run: uv pip install --system -e ".[dev]"
       - name: ruff check (lint)
@@ -37,10 +41,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Set up uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
       - name: Install dev dependencies
         run: uv pip install --system -e ".[dev,metrics]"
       - name: mypy --strict
@@ -56,16 +64,19 @@ jobs:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Set up uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
-          python-version: ${{ matrix.python-version }}
+          cache-dependency-glob: "**/pyproject.toml"
       - name: Install with dev extras
         run: uv pip install --system -e ".[dev,metrics]"
       - name: Run tests with coverage
         run: >-
-          pytest -m "not integration and not slow"
+          pytest -m "not integration and not slow and not benchmark"
           --cov=unwind --cov-report=xml --cov-report=term-missing
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
@@ -74,16 +85,21 @@ jobs:
           flags: ${{ matrix.os }}-py${{ matrix.python-version }}
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
+        continue-on-error: true
 
   protocol-conformance:
     name: Protocol conformance (mandatory gate)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - name: Set up uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
       - name: Install with dev extras
         run: uv pip install --system -e ".[dev]"
       - name: Protocol-conformance suite
@@ -119,7 +135,7 @@ jobs:
     needs: [lint, typecheck, test, protocol-conformance, ts]
     runs-on: ubuntu-latest
     steps:
-      - name: Verify all jobs passed
+      - name: Verify all required jobs passed
         if: >-
           contains(needs.*.result, 'failure') ||
           contains(needs.*.result, 'cancelled')

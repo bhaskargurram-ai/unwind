@@ -23,28 +23,28 @@ else
 	$(PY) -m pip install -e ".[dev,docs,metrics]"
 endif
 
-lint: ## Lint: ruff check + ruff format --check
+lint: ## Lint: ruff check + black --check (Black is the formatter of record)
 	ruff check .
-	ruff format --check .
+	black --check .
 
-fmt: ## Auto-format: ruff format + black
-	ruff format .
+fmt: ## Auto-format: ruff lint-fix + black (Black is the formatter of record)
+	ruff check --fix .
 	black .
 
 typecheck: ## Static typing: mypy --strict on the package
 	mypy unwind
 
 test: ## Run the fast unit tests (excludes integration & slow)
-	pytest -m "not integration and not slow"
+	pytest -m "not integration and not slow and not benchmark"
 
 conformance: ## MANDATORY gate: protocol-conformance suite (a broken proxy is worthless)
 	pytest -m protocol -ra
 
 bench: ## Run performance benchmarks (pytest-benchmark)
-	pytest -m "not integration" --benchmark-only
+	pytest -m benchmark --benchmark-only
 
 cov: ## Run tests with a coverage report
-	pytest -m "not integration and not slow" --cov=unwind --cov-report=term-missing --cov-report=xml
+	pytest -m "not integration and not slow and not benchmark" --cov=unwind --cov-report=term-missing --cov-report=xml
 
 demo: ## Run the 20-second undo demo
 	$(PY) scripts/demo.py

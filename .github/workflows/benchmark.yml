@@ -35,9 +35,13 @@ jobs:
       - name: Run benchmarks
         # Emphasis: R0 (read) calls must stay ~free. This tracks the added-latency
         # regression the project's success contract depends on.
-        run: pytest -m "not integration" --benchmark-only --benchmark-json=output.json
+        run: pytest -m benchmark --benchmark-only --benchmark-json=output.json
 
       - name: Store benchmark result & alert on regression
+        # The trend chart lives on gh-pages, which only exists once the repo is
+        # public and Pages is enabled (at launch). Until then, still run the
+        # benchmarks above (validates they work) but skip the publish.
+        if: github.event.repository.visibility == 'public'
         uses: benchmark-action/github-action-benchmark@v1
         with:
           name: Unwind pytest-benchmark

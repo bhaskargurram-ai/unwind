@@ -160,6 +160,7 @@ markers = [
     "protocol: protocol-conformance tests (mandatory gate)",
     "integration: integration tests requiring the docker sandbox",
     "llm: tests that call a real LLM (skipped without credentials)",
+    "benchmark: pytest-benchmark micro-benchmarks (hot-path latency)",
 ]
 
 [tool.coverage.run]

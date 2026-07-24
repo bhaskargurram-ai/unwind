@@ -43,6 +43,9 @@ jobs:
     name: Deploy to GitHub Pages
     needs: build
     runs-on: ubuntu-latest
+    # GitHub Pages for a private repo needs a paid plan; deploy only once the
+    # repo is public (at launch). The build job above still validates the site.
+    if: github.event.repository.visibility == 'public'
     permissions:
       pages: write          # deploy to Pages
       id-token: write        # verify the deployment origin

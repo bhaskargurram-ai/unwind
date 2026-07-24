@@ -1,8 +1,9 @@
 name: Release
 
+# Manual-only until launch: prevents premature version bumps / GitHub releases
+# on a private pre-launch repo. Flip to `push: branches: [main]` at launch to
+# enable Conventional-Commit-driven automatic releases.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

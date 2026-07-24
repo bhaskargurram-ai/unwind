@@ -16,6 +16,9 @@ jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
+    # OpenSSF Scorecard's publish/badge only works on public repos; skip while
+    # the repo is private so it doesn't post red failures pre-launch.
+    if: github.event.repository.visibility == 'public'
     permissions:
       # Needed to upload the SARIF results to the code-scanning dashboard.
       security-events: write
