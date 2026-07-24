@@ -1,0 +1,83 @@
+# ---------------------------------------------------------------------------
+# Unwind .gitignore
+# ---------------------------------------------------------------------------
+
+# === RESEARCH PAPER — NEVER COMMIT (see CLAUDE.md / PROJECT.md) ==============
+# The paper, its drafts, figures, and raw experiment data live in-repo for
+# convenience but must never be pushed. A pre-commit guard also blocks staging
+# anything under paper/. Verify with:  git check-ignore -v paper/
+/paper/
+paper/**
+*.aux
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.out.ps
+
+# === Crawled server data / credentials — NEVER COMMIT (commit crawlers only) =
+/bench/catalog/data/
+/bench/catalog/_cache/
+*.crawl.json
+.env
+.env.*
+!.env.example
+secrets.*
+*.pem
+*.key
+
+# === Sandbox / undo-log runtime state =======================================
+*.sqlite
+*.sqlite3
+*.db
+/demo/_state/
+/.unwind/
+unwind.db
+
+# === Python =================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+.venv/
+venv/
+env/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.hypothesis/
+*.cover
+
+# === Node / TypeScript ======================================================
+node_modules/
+ts/dist/
+*.tsbuildinfo
+.npm/
+
+# === Docs build =============================================================
+/site/
+
+# === Editors / OS ===========================================================
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# === Misc ===================================================================
+*.log
+.direnv/
