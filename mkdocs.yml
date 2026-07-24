@@ -1,0 +1,165 @@
+# mkdocs.yml — documentation site for Unwind
+# A reversibility layer for agentic tool use.
+#
+# Build with the [docs] extra from pyproject.toml:
+#   pip install -e ".[docs]"   # mkdocs-material, mkdocs-gen-files,
+#                              # mkdocstrings[python], pymdown-extensions
+#   mkdocs serve   # local preview
+#   mkdocs build   # static site into ./site
+#
+# No plugin here needs network access or a paid tier — the site builds fully
+# offline (Mermaid renders client-side from the CDN-free superfences bundle
+# shipped with mkdocs-material).
+
+site_name: Unwind
+site_description: >-
+  A reversibility layer for agentic tool use — a transparent MCP proxy that
+  infers which tool calls can be taken back, synthesises inverse operations,
+  keeps a durable cross-server undo log, and interrupts you only for genuinely
+  irreversible actions.
+site_author: Bhaskar Gurram
+site_url: https://bhaskargurram-ai.github.io/unwind/
+
+repo_url: https://github.com/bhaskargurram-ai/unwind
+repo_name: bhaskargurram-ai/unwind
+edit_uri: edit/main/docs/
+
+copyright: >-
+  Copyright &copy; 2026 Bhaskar Gurram — Unwind is released under the Apache-2.0 licence.
+
+theme:
+  name: material
+  language: en
+  # icon:
+  #   logo: material/backup-restore
+  #   repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - navigation.instant
+    - navigation.tracking
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+extra:
+  # Social links — placeholders; wire real handles at launch.
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/bhaskargurram-ai/unwind
+      name: Unwind on GitHub
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/unwind-mcp/
+      name: unwind-mcp on PyPI
+    - icon: fontawesome/brands/npm
+      link: https://www.npmjs.com/package/unwind-mcp
+      name: unwind-mcp on npm
+  # Analytics placeholder — set provider + property to enable (opt-in only).
+  # analytics:
+  #   provider: google
+  #   property: G-XXXXXXXXXX
+  version:
+    provider: mike
+
+# extra_css:
+#   - assets/extra.css
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - def_list
+  - toc:
+      permalink: true
+      permalink_title: Anchor link to this section
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.keys
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.caret
+  - pymdownx.tilde
+  - pymdownx.mark
+
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  # gen-files is optional; enable if/when an API reference stub generator lands.
+  # - gen-files:
+  #     scripts:
+  #       - docs/gen_api_pages.py
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [.]
+          options:
+            docstring_style: numpy
+            show_source: true
+            show_root_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            members_order: source
+            separate_signature: true
+            merge_init_into_class: true
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Concepts:
+      - Reversibility taxonomy: concepts/taxonomy.md
+      - Compensation synthesis: concepts/compensation.md
+      - Architecture: concepts/architecture.md
+  - Agentic tools: agentic-tools.md
+  - Reversibility index: reversibility-index.md
+  - ReversiBench: benchmark.md
+  - Integrations: integrations.md
+  - API reference: reference.md
+  - FAQ: faq.md
+  - Research paper: paper.md
+  - Contributing: contributing.md
+  - Launch drafts:
+      - Show HN: launch/show-hn.md
+      - Reddit: launch/reddit.md
+      - Twitter / X thread: launch/twitter-thread.md
