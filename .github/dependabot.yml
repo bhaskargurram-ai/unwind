@@ -6,19 +6,18 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
     labels:
       - "dependencies"
       - "python"
+    # One grouped PR per ecosystem (all update types) to avoid PR spam.
     groups:
-      python-minor-patch:
-        applies-to: version-updates
-        update-types:
-          - "minor"
-          - "patch"
+      python:
+        patterns:
+          - "*"
 
   # --- GitHub Actions ------------------------------------------------------
   - package-ecosystem: "github-actions"
@@ -26,19 +25,16 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "ci(deps)"
     labels:
       - "dependencies"
-      - "github-actions"
       - "area: ci"
     groups:
-      actions-minor-patch:
-        applies-to: version-updates
-        update-types:
-          - "minor"
-          - "patch"
+      github-actions:
+        patterns:
+          - "*"
 
   # --- npm (TypeScript shim) ----------------------------------------------
   - package-ecosystem: "npm"
@@ -46,17 +42,14 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
     labels:
       - "dependencies"
-      - "javascript"
       - "area: ts"
     groups:
-      npm-minor-patch:
-        applies-to: version-updates
-        update-types:
-          - "minor"
-          - "patch"
+      npm:
+        patterns:
+          - "*"
