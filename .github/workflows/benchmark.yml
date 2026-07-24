@@ -22,7 +22,7 @@ jobs:
       contents: write        # push benchmark data to the gh-pages branch
       deployments: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v3

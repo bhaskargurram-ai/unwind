@@ -17,7 +17,7 @@ jobs:
       contents: write        # upload signatures to the release
       id-token: write         # OIDC identity for keyless Sigstore signing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v5
