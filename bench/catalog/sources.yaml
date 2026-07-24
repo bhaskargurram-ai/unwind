@@ -1,0 +1,113 @@
+# ReversiBench catalog sources (PROJECT.md §8 "Corpus").
+#
+# Public MCP servers to sample, STRATIFIED BY DOMAIN so the benchmark is
+# cross-vertical by construction (files, VCS, DB, comms, payments, CRM, cloud,
+# calendar). Only this manifest and the content-hash file (hashes.json) are
+# committed; crawl outputs land under the gitignored bench/catalog/data/.
+#
+# `launch` describes how the crawler starts the server over stdio. Public
+# reference servers only — never a server requiring committed credentials.
+# Credentialed servers list env var NAMES (values supplied at crawl time, never
+# committed). Splits are assigned by SERVER (server-disjoint) in bench/card.md.
+
+version: 1
+strata:
+  - files
+  - vcs
+  - db
+  - comms
+  - payments
+  - crm
+  - cloud
+  - calendar
+
+servers:
+  # ---- files -------------------------------------------------------------
+  - id: filesystem
+    domain: files
+    description: Reference filesystem server (read/write/move/delete files).
+    license: MIT
+    launch:
+      transport: stdio
+      command: npx
+      args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp/sandbox"]
+
+  # ---- vcs ---------------------------------------------------------------
+  - id: git
+    domain: vcs
+    description: Reference git server (status/commit/branch/reset/push).
+    license: MIT
+    launch:
+      transport: stdio
+      command: uvx
+      args: ["mcp-server-git", "--repository", "/tmp/sandbox-repo"]
+
+  # ---- db ----------------------------------------------------------------
+  - id: sqlite
+    domain: db
+    description: Reference SQLite server (query/insert/update/drop).
+    license: MIT
+    launch:
+      transport: stdio
+      command: uvx
+      args: ["mcp-server-sqlite", "--db-path", "/tmp/sandbox.db"]
+
+  # ---- comms (in-repo mock; irreversible send with short recall window) --
+  - id: mock-comms
+    domain: comms
+    description: In-repo mock email/Slack server (send_email/post_message).
+    license: Apache-2.0
+    launch:
+      transport: stdio
+      command: python
+      args: ["-m", "bench.sandbox.mock_servers.comms_server"]
+
+  # ---- payments (in-repo mock; charge R4, refund partial compensation) ---
+  - id: mock-payments
+    domain: payments
+    description: In-repo mock payments server (charge/refund/void).
+    license: Apache-2.0
+    launch:
+      transport: stdio
+      command: python
+      args: ["-m", "bench.sandbox.mock_servers.payments_server"]
+
+  # ---- crm ---------------------------------------------------------------
+  - id: crm-placeholder
+    domain: crm
+    description: >
+      Placeholder for a public CRM server (e.g. contacts create/update/delete).
+      Populate `launch` before crawling; credentials via env NAMES only.
+    license: unknown
+    launch:
+      transport: stdio
+      command: TODO
+      args: []
+    env: [CRM_API_KEY]
+
+  # ---- cloud -------------------------------------------------------------
+  - id: cloud-placeholder
+    domain: cloud
+    description: >
+      Placeholder for a public cloud-resource server (buckets/instances).
+      Reversibility is strongly environment-relative here (versioned buckets vs
+      not) — see EnvironmentDescriptor and bench/card.md.
+    license: unknown
+    launch:
+      transport: stdio
+      command: TODO
+      args: []
+    env: [CLOUD_TOKEN]
+
+  # ---- calendar ----------------------------------------------------------
+  - id: calendar-placeholder
+    domain: calendar
+    description: >
+      Placeholder for a public calendar server (events create/update/delete;
+      invites are external side effects -> R3).
+    license: unknown
+    launch:
+      transport: stdio
+      command: TODO
+      args: []
+    env: [CALENDAR_TOKEN]

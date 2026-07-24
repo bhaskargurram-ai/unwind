@@ -1,0 +1,36 @@
+# ReversiBench sandbox — mock-server fragment (PROJECT.md §8, §10).
+#
+# Merge with the root docker-compose.yml (which provides the REAL reference
+# servers: filesystem, git, sqlite) so the live-validation harness can grade
+# fidelity across the full R0-R4 range:
+#
+#   docker compose -f docker-compose.yml -f bench/sandbox/docker-compose.sandbox.yml up
+#
+# These two services host the in-repo mocks that model the irreversible-ish
+# comms/payments tools no public server would let a benchmark exercise.
+# Sandbox runtime state is ephemeral and gitignored (never commit *.db / _state).
+
+services:
+  mock-comms:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ../../:/app:ro
+    command: ["python", "-m", "bench.sandbox.mock_servers.comms_server"]
+    stdin_open: true
+    tty: false
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PYTHONPATH: /app
+
+  mock-payments:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ../../:/app:ro
+    command: ["python", "-m", "bench.sandbox.mock_servers.payments_server"]
+    stdin_open: true
+    tty: false
+    environment:
+      PYTHONUNBUFFERED: "1"
+      PYTHONPATH: /app

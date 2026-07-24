@@ -1,0 +1,12 @@
+{
+  "$schema_note": "Content-hash manifest for ReversiBench crawls. Crawled data is NEVER committed (PROJECT.md §12); this file commits an integrity hash per server so a reviewer can re-crawl and verify. Regenerate with: python -m bench.catalog.crawler --hash <server_id>. Hashes are placeholders until a pinned crawl is captured.",
+  "algorithm": "sha256",
+  "hasher": "bench.catalog.crawler.hash_catalog",
+  "crawls": {
+    "filesystem": {"hash": null, "crawled_at": null, "server_commit": null, "n_tools": null},
+    "git": {"hash": null, "crawled_at": null, "server_commit": null, "n_tools": null},
+    "sqlite": {"hash": null, "crawled_at": null, "server_commit": null, "n_tools": null},
+    "mock-comms": {"hash": null, "crawled_at": null, "server_commit": null, "n_tools": null},
+    "mock-payments": {"hash": null, "crawled_at": null, "server_commit": null, "n_tools": null}
+  }
+}
