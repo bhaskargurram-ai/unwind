@@ -47,7 +47,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-llm = ["openai>=1.40", "anthropic>=0.34"]
+llm = ["openai>=1.40", "anthropic>=0.119.0"]
 metrics = ["numpy>=1.26", "scipy>=1.13", "scikit-learn>=1.5", "matplotlib>=3.9"]
 dev = [
     "pytest>=8.2",
