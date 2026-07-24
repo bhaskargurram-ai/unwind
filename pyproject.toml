@@ -52,7 +52,7 @@ metrics = ["numpy>=1.26", "scipy>=1.13", "scikit-learn>=1.5", "matplotlib>=3.9"]
 dev = [
     "pytest>=8.2",
     "pytest-asyncio>=0.23",
-    "pytest-cov>=5.0",
+    "pytest-cov>=7.1.0",
     "pytest-benchmark>=4.0",
     "ruff>=0.6",
     "black>=24.8",
