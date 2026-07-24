@@ -1,0 +1,31 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dep-review-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Allows the action to post a summary comment on the PR.
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Dependency review
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
+          # Reject dependencies under licenses incompatible with Apache-2.0 distribution.
+          deny-licenses: GPL-2.0, GPL-3.0, AGPL-3.0

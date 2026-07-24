@@ -1,0 +1,49 @@
+title: "[Idea] "
+labels: ["idea"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Got an idea to make reversibility inference sharper or more useful? Let's talk
+        it through here before it becomes a formal feature request.
+
+        > **Scope reminder:** Unwind is the recovery layer, not a gateway. Auth, RBAC,
+        > rate limiting, secret scanning, and isolation are out of scope forever.
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What should Unwind do, and what problem does it solve?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - proxy
+        - classify
+        - synthesize
+        - undolog
+        - policy
+        - bench
+        - eval
+        - docs
+        - ci
+        - ts
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: fit
+    attributes:
+      label: How does it sharpen or exploit reversibility classification?
+      description: Every feature must do one of these to be in scope.
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Prior art, alternatives, open questions
+    validations:
+      required: false

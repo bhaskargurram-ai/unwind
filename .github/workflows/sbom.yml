@@ -1,0 +1,51 @@
+name: SBOM
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sbom:
+    name: Generate CycloneDX SBOM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # attach the SBOM to the GitHub release
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install project + cyclonedx
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install cyclonedx-bom
+
+      - name: Generate CycloneDX SBOM (JSON + XML)
+        run: |
+          cyclonedx-py environment --output-format JSON --outfile unwind-sbom.cdx.json
+          cyclonedx-py environment --output-format XML  --outfile unwind-sbom.cdx.xml
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            unwind-sbom.cdx.json
+            unwind-sbom.cdx.xml
+
+      - name: Attach SBOM to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            unwind-sbom.cdx.json
+            unwind-sbom.cdx.xml

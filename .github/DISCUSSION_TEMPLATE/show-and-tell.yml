@@ -1,0 +1,36 @@
+title: "[Show and tell] "
+labels: ["show-and-tell"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Built something with Unwind? Wrapped an interesting server, added a gateway
+        integration, or caught a scary irreversible action before it landed? Show us! 🙌
+  - type: textarea
+    id: what
+    attributes:
+      label: What did you build or discover?
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Your setup
+      description: Which MCP client and upstream server(s) did you wrap?
+      placeholder: "Claude Code + @modelcontextprotocol/server-filesystem, git"
+    validations:
+      required: false
+  - type: textarea
+    id: links
+    attributes:
+      label: Links, screenshots, or demos
+      description: Repos, GIFs, blog posts, threads — anything you want to share.
+    validations:
+      required: false
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Anything you'd want improved?
+      description: Optional — what would have made this easier?
+    validations:
+      required: false

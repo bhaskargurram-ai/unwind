@@ -1,0 +1,73 @@
+name: "💡 Feature request"
+description: "Suggest an idea that sharpens or exploits reversibility classification."
+title: "feat: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! For open-ended proposals, consider starting a
+        [Discussion → Ideas](https://github.com/bhaskargurram-ai/unwind/discussions/categories/ideas)
+        thread first.
+
+        > **Scope note:** Unwind is the *reversibility / recovery* layer. Auth, RBAC,
+        > rate limiting, secret scanning, and container isolation are **permanently out
+        > of scope** — that space is saturated. Every feature must sharpen the R0–R4
+        > classification or exploit it. See
+        > ["Not a gateway"](https://github.com/bhaskargurram-ai/unwind#not-a-gateway).
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checklist
+      options:
+        - label: I searched existing issues and discussions for this idea.
+          required: true
+        - label: This is within scope (it sharpens or exploits reversibility inference, and is not a gateway feature).
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: The user need, not the solution. Who is blocked and how?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What you'd like Unwind to do.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - "proxy (transparency / passthrough)"
+        - "classify (R0–R4 inference)"
+        - "synthesize (compensation)"
+        - "undolog"
+        - "policy (escalation / calibration)"
+        - "bench (ReversiBench)"
+        - "eval (metrics)"
+        - "docs"
+        - "ci / release"
+        - "ts (TypeScript shim)"
+        - "other"
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
+  - type: textarea
+    id: safety
+    attributes:
+      label: Reversibility / safety implications
+      description: >-
+        Does this affect fail-safe behavior, fidelity grading, or the interruption–damage
+        tradeoff? Note anything that could risk over-promising undo.
+    validations:
+      required: false

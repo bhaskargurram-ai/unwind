@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions & Q&A
+    url: https://github.com/bhaskargurram-ai/unwind/discussions/categories/q-a
+    about: Ask how to do something, or whether it's possible. Not for bug reports.
+  - name: 💡 Ideas & discussion
+    url: https://github.com/bhaskargurram-ai/unwind/discussions/categories/ideas
+    about: Propose and discuss ideas before opening a formal feature request.
+  - name: 🙌 Show and tell
+    url: https://github.com/bhaskargurram-ai/unwind/discussions/categories/show-and-tell
+    about: Share what you built with Unwind.
+  - name: 🔒 Report a security vulnerability
+    url: https://github.com/bhaskargurram-ai/unwind/security/advisories/new
+    about: Privately disclose a security issue — never file it as a public issue.
+  - name: 💬 Discord (coming soon)
+    url: https://github.com/bhaskargurram-ai/unwind#community
+    about: Real-time chat — invite link coming soon.

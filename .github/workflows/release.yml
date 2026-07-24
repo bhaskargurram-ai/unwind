@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Only one release may run at a time.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Semantic release
+    runs-on: ubuntu-latest
+    # Skip commits made by the release bot itself to avoid loops.
+    if: github.repository == 'bhaskargurram-ai/unwind'
+    permissions:
+      contents: write        # create tags, releases, push the version bump + changelog
+      id-token: write         # OIDC for downstream trusted publishing
+      pull-requests: write    # update PR/release notes
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # A token with push rights is needed for the version-bump commit.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Python Semantic Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v9
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Computes the next version from Conventional Commits, updates
+          # CHANGELOG.md and the version in pyproject.toml / __init__.py / ts,
+          # commits, tags v<version>, and creates the GitHub release.
+          # The v* tag then triggers pypi-publish / npm-publish / docker / sbom / sign.

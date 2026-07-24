@@ -1,0 +1,56 @@
+# Path-based auto-labeling for pull requests.
+# Consumed by actions/labeler@v5 (see .github/workflows/labeler.yml).
+# Syntax: https://github.com/actions/labeler
+
+"area: proxy":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "unwind/proxy/**"
+
+"area: classify":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "unwind/classify/**"
+
+"area: synthesize":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "unwind/synthesize/**"
+
+"area: undolog":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "unwind/undolog/**"
+
+"area: policy":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "unwind/policy/**"
+          - "unwind/calibration/**"
+
+"area: bench":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "bench/**"
+
+"area: eval":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "eval/**"
+
+"area: docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "**/*.md"
+          - "mkdocs.yml"
+
+"area: ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+
+"area: ts":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "ts/**"

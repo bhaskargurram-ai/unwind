@@ -1,0 +1,53 @@
+name: Benchmark
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: benchmark-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    name: pytest-benchmark
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # push benchmark data to the gh-pages branch
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install with dev extras
+        run: uv pip install --system -e ".[dev,metrics]"
+
+      - name: Run benchmarks
+        # Emphasis: R0 (read) calls must stay ~free. This tracks the added-latency
+        # regression the project's success contract depends on.
+        run: pytest -m "not integration" --benchmark-only --benchmark-json=output.json
+
+      - name: Store benchmark result & alert on regression
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Unwind pytest-benchmark
+          tool: pytest
+          output-file-path: output.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Publish a trend chart to gh-pages, only from main.
+          auto-push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          # Flag a PR if it regresses added latency by >150%.
+          alert-threshold: "150%"
+          comment-on-alert: true
+          fail-on-alert: false
+          alert-comment-cc-users: "@bhaskargurram-ai"

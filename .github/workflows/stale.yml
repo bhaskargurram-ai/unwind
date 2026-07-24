@@ -1,0 +1,43 @@
+name: Stale
+
+on:
+  schedule:
+    # Daily at 01:37 UTC.
+    - cron: "37 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stale:
+    name: Mark and close stale items
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          exempt-issue-labels: "pinned,security,good first issue,help wanted,roadmap"
+          exempt-pr-labels: "pinned,security,work-in-progress"
+          exempt-all-milestones: true
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has had no
+            activity for 60 days. It will be closed in 14 days if no further activity
+            occurs. If it's still relevant, just leave a comment. Thank you for helping
+            build Unwind!
+          stale-pr-message: >
+            This pull request has been automatically marked as stale because it has had
+            no activity for 60 days. It will be closed in 14 days if no further activity
+            occurs. Rebase or comment to keep it open. Thanks for your contribution!
+          close-issue-message: >
+            Closing due to inactivity. Please reopen if this is still relevant — no hard
+            feelings, and thank you.
+          close-pr-message: >
+            Closing due to inactivity. Feel free to reopen when you're ready to pick it
+            back up. Thanks!

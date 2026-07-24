@@ -1,0 +1,62 @@
+version: 2
+updates:
+  # --- Python (pip / pyproject) -------------------------------------------
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      python-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  # --- GitHub Actions ------------------------------------------------------
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "ci(deps)"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "area: ci"
+    groups:
+      actions-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"
+
+  # --- npm (TypeScript shim) ----------------------------------------------
+  - package-ecosystem: "npm"
+    directory: "/ts"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    labels:
+      - "dependencies"
+      - "javascript"
+      - "area: ts"
+    groups:
+      npm-minor-patch:
+        applies-to: version-updates
+        update-types:
+          - "minor"
+          - "patch"

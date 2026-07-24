@@ -1,0 +1,67 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# ---------------------------------------------------------------------------
+# ONE-TIME SETUP (PyPI Trusted Publishing / OIDC — no stored token):
+#   1. Create the project `unwind-mcp` on https://pypi.org (or reserve it).
+#   2. On PyPI → Manage → Publishing → "Add a new pending publisher":
+#        Owner:            bhaskargurram-ai
+#        Repository name:  unwind
+#        Workflow name:    pypi-publish.yml
+#        Environment name: pypi
+#   3. That's it — GitHub mints a short-lived OIDC token per run. NO API token
+#      is ever stored as a secret. See:
+#      https://docs.pypi.org/trusted-publishers/
+# ---------------------------------------------------------------------------
+
+jobs:
+  build:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+      - name: Check metadata
+        run: |
+          python -m pip install --upgrade twine
+          twine check dist/*
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI (Trusted Publishing)
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/unwind-mcp/
+    permissions:
+      # Mandatory for OIDC Trusted Publishing. NO PyPI token is used.
+      id-token: write
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-dist
+          path: dist/
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # No `password:` — authentication is via the OIDC id-token above.

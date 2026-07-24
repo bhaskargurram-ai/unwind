@@ -1,0 +1,41 @@
+name: Welcome
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  welcome:
+    name: Greet first-time contributors
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: >
+            👋 Thanks for opening your first issue in **Unwind** — the reversibility
+            layer for agentic tool use! A maintainer will take a look soon. If this is a
+            bug, please make sure you've filled in the version, client, and upstream
+            server. If it's an idea, check that it sharpens or exploits reversibility
+            classification (we're deliberately *not* a gateway — see
+            [Not a gateway](https://github.com/bhaskargurram-ai/unwind#not-a-gateway)).
+          pr-message: >
+            🎉 Thank you for your first pull request to **Unwind**! Before it can be
+            reviewed, please make sure:
+
+            - the PR title is a [Conventional Commit](https://www.conventionalcommits.org/) (`feat:`, `fix:`, ...),
+            - your commits are signed off (`git commit -s` — DCO),
+            - and the mandatory gates pass: `make lint typecheck test conformance`.
+
+            The **protocol-conformance** suite (`pytest -m protocol`) is
+            non-negotiable — a proxy that breaks a client is worthless. See
+            [CONTRIBUTING.md](https://github.com/bhaskargurram-ai/unwind/blob/main/CONTRIBUTING.md).
+            Welcome aboard! 🚀
