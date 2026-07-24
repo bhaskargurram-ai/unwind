@@ -138,8 +138,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Verify all required jobs passed
-        if: >-
-          contains(needs.*.result, 'failure') ||
-          contains(needs.*.result, 'cancelled')
-        run: exit 1
-      - run: echo "All CI jobs passed."
+        env:
+          RESULTS: >-
+            ${{ needs.lint.result }} ${{ needs.typecheck.result }}
+            ${{ needs.test.result }} ${{ needs.protocol-conformance.result }}
+            ${{ needs.ts.result }}
+        run: |
+          echo "Required job results: $RESULTS"
+          for r in $RESULTS; do
+            if [ "$r" != "success" ]; then
+              echo "::error::A required job concluded '$r' (expected 'success')."
+              exit 1
+            fi
+          done
+          echo "All required CI jobs passed."
