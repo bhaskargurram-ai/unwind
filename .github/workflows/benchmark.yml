@@ -24,10 +24,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Set up uv
         uses: astral-sh/setup-uv@v3
         with:
           enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
 
       - name: Install with dev extras
         run: uv pip install --system -e ".[dev,metrics]"
