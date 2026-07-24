@@ -1,8 +1,9 @@
 name: Benchmark
 
 on:
-  push:
-    branches: [main]
+  # Cost control: don't run on every main push. Benchmarks run on PRs (to catch
+  # regressions before merge) and manually. The trend chart publishes to gh-pages
+  # only when the repo is public (gated in the job below).
   pull_request:
     branches: [main]
   workflow_dispatch:

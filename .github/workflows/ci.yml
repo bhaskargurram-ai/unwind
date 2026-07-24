@@ -57,11 +57,21 @@ jobs:
   test:
     name: Test (${{ matrix.os }} · py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
+    # Pre-launch cost control: private-repo Actions minutes are metered and
+    # macOS bills 10x / Windows 2x. We run the full Python range on Linux plus a
+    # single macOS + Windows smoke cell (cross-OS is already proven green). At
+    # launch the repo goes public (free unlimited Actions) — widen to the full
+    # 3x3 matrix then by removing the `include` and listing all three OSes.
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest]
         python-version: ["3.11", "3.12", "3.13"]
+        include:
+          - os: macos-latest
+            python-version: "3.13"
+          - os: windows-latest
+            python-version: "3.13"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

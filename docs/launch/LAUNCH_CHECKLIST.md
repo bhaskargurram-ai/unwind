@@ -1,11 +1,41 @@
 # Unwind — Launch Checklist & Handoff
 
-Everything below is what remains to take Unwind from a **complete, green, private
-repo** to a **public launch**. The code, tests, CI, docs, demo, TS shim, and
-benchmark harness are all done and passing. These are the steps that need *your*
-accounts / one-time UI actions (a bot can't or shouldn't do them).
+Everything below is what remains to take Unwind from a **complete, private repo**
+to a **public launch**. The code, tests, docs, demo, TS shim, and benchmark
+harness are all done. These are the steps that need *your* accounts / one-time UI
+actions (a bot can't or shouldn't do them).
 
 Repo: <https://github.com/bhaskargurram-ai/unwind> (currently **private**).
+
+---
+
+## ⚠️ READ FIRST — GitHub Actions is out of quota (billing, not code)
+
+**CI passed fully green on commit `2ea130c`** — all 14 jobs (lint, mypy, the
+3×3 OS/Python test matrix, the mandatory protocol-conformance gate, and the
+TypeScript build). You can see that green run in the Actions tab.
+
+**After that, GitHub Actions stopped running** and later runs fail in ~7 seconds
+with *zero* steps executed. The exact reason (from the run annotations) is:
+
+> *"The job was not started because recent account payments have failed or your
+> spending limit needs to be increased. Please check the 'Billing & plans'
+> section in your settings."*
+
+This is **not a code or workflow problem** — the pipeline is proven correct. It's
+that a **private** repo meters Actions minutes (macOS bills 10×, Windows 2×), and
+the initial burst of Dependabot + every-workflow runs drained the monthly quota.
+
+**Two ways to make CI green again (pick one):**
+1. **Go public** (the plan anyway) — public repos get *free unlimited* Actions.
+   The moment you flip visibility, CI runs and goes green. *(Recommended.)*
+2. **Raise the Actions spending limit** — GitHub → Settings → Billing & plans →
+   Actions → set a spending limit (even a few dollars restores it immediately).
+
+To reduce burn in the meantime, I already: cancelled in-flight runs, slimmed the
+test matrix (9→5 jobs; full 3×3 is proven and restored at launch), made Docker
+amd64-only except on tags, moved Benchmark to PR-only, set Dependabot to monthly
++ minor/patch-only, and gated CodeQL/Scorecard/Pages to public.
 
 ---
 
@@ -41,7 +71,12 @@ Repo: <https://github.com/bhaskargurram-ai/unwind> (currently **private**).
 - [ ] Enable **branch protection** on `main` (requires Pro or public): require the
       `CI success` check + ≥1 review. (A ready API call is in section 5.)
 - [ ] Upload a **social preview** image (Settings → General → Social preview), 1280×640.
-- [ ] OpenSSF **Scorecard** + **Benchmark** trend workflows auto-activate on public.
+- [ ] OpenSSF **Scorecard** + **Benchmark** trend + **CodeQL** + **Pages** deploy
+      all auto-activate on public (they're gated on `repository.visibility`).
+- [ ] Optionally widen `ci.yml`'s `test` matrix back to the full 3×3 (list
+      `macos-latest` and `windows-latest` under `matrix.os` and drop the
+      `include:`) and set Docker `platforms` back to multi-arch on push — cheap
+      once Actions is free on public.
 
 ## 3. First release
 - [ ] Confirm CI is green on `main`.

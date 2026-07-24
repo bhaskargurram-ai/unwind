@@ -1,20 +1,22 @@
 version: 2
+# Pre-launch posture: monthly, grouped minor/patch only, majors ignored (they
+# need manual migration and each PR burns private-repo Actions minutes). After
+# launch (public repo = free unlimited Actions), consider weekly + re-enabling
+# major bumps as individual reviewable PRs.
 updates:
   # --- Python (pip / pyproject) -------------------------------------------
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
+      interval: "monthly"
+    open-pull-requests-limit: 3
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-    labels:
-      - "dependencies"
-      - "python"
-    # Group only safe minor/patch bumps into one PR; MAJOR bumps come as their
-    # own reviewable PRs (they can break builds — e.g. mypy/ruff/pytest majors).
+    labels: ["dependencies", "python"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       python-minor-patch:
         update-types: ["minor", "patch"]
@@ -23,14 +25,14 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
+      interval: "monthly"
+    open-pull-requests-limit: 3
     commit-message:
       prefix: "ci(deps)"
-    labels:
-      - "dependencies"
-      - "area: ci"
+    labels: ["dependencies", "area: ci"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       actions-minor-patch:
         update-types: ["minor", "patch"]
@@ -39,15 +41,15 @@ updates:
   - package-ecosystem: "npm"
     directory: "/ts"
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 5
+      interval: "monthly"
+    open-pull-requests-limit: 3
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-    labels:
-      - "dependencies"
-      - "area: ts"
+    labels: ["dependencies", "area: ts"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
     groups:
       npm-minor-patch:
         update-types: ["minor", "patch"]

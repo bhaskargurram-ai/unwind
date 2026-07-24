@@ -1,8 +1,9 @@
 name: Docker
 
+# Cost control: build/validate on PRs and publish on version tags — not on every
+# main push (the Dockerfile is already exercised by PR builds).
 on:
   push:
-    branches: [main]
     tags:
       - "v*"
   pull_request:
@@ -63,7 +64,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          # Cost control: amd64-only for branch pushes; full multi-arch (adds
+          # arm64 via QEMU emulation, which is slow/metered) only on version tags.
+          platforms: ${{ startsWith(github.ref, 'refs/tags/') && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
           # Only push on non-PR events; PRs build to validate but never publish.
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
