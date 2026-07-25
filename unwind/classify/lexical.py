@@ -48,6 +48,32 @@ _VERB_RULES: list[tuple[frozenset[str], EffectVerb, ReversibilityClass]] = [
                 "ls",
                 "cat",
                 "grep",
+                # pure / nullipotent computations and lookups (no state change)
+                "echo",
+                "calculate",
+                "compute",
+                "convert",
+                "resolve",
+                "evaluate",
+                "eval",
+                "format",
+                "validate",
+                "render",
+                "ping",
+                "sum",
+                "diff",
+                "compare",
+                "explain",
+                "summarize",
+                "extract",
+                "detect",
+                "analyze",
+                "test",
+                "return",
+                "retrieve",
+                "open",
+                "browse",
+                "graph",
             }
         ),
         EffectVerb.READ,
@@ -72,6 +98,11 @@ _VERB_RULES: list[tuple[frozenset[str], EffectVerb, ReversibilityClass]] = [
                 "label",
                 "tag",
                 "annotate",
+                # self-reversible state switches (switch/check-out back)
+                "switch",
+                "checkout",
+                "reindex",
+                "rebuild",
             }
         ),
         EffectVerb.UPDATE,
@@ -251,21 +282,26 @@ def tokenize(name: str) -> list[str]:
     return _TOKEN_RE.findall(spaced.lower())
 
 
+def _token_verb(token: str) -> tuple[EffectVerb, ReversibilityClass] | None:
+    for keywords, verb, rclass in _VERB_RULES:
+        if token in keywords:
+            return verb, rclass
+    return None
+
+
 def _match_verb(tokens: list[str]) -> tuple[EffectVerb, ReversibilityClass] | None:
-    token_set = set(tokens)
-    # Mutation verbs win over R0 read verbs when both appear: `write_query`,
-    # `update_and_get`, `create_or_replace` are mutations, not reads. So we test
-    # the non-R0 (mutating) rules first and only fall back to R0 (nullipotent)
-    # when no mutation verb is present. This is also the fail-safe order (golden
-    # rule #2: don't assume an action is nullipotent).
-    for keywords, verb, rclass in _VERB_RULES:
-        if rclass == ReversibilityClass.R0:
-            continue
-        if token_set & keywords:
-            return verb, rclass
-    for keywords, verb, rclass in _VERB_RULES:
-        if rclass == ReversibilityClass.R0 and token_set & keywords:
-            return verb, rclass
+    # Leading-token priority: MCP tools follow a verb_noun convention, so the
+    # FIRST token that is a recognised verb determines the effect. This correctly
+    # disambiguates compound names where a read and a mutation word co-occur:
+    #   get_charge   -> get   (R0 read)     write_query -> write (R1 mutation)
+    #   charge_card  -> charge(R4)          create_page -> create(R2)
+    # Only if no token in order is a recognised verb do we fall through (→ R4
+    # fail-safe at the caller). This replaces an earlier "any mutation wins" rule
+    # that mis-hardened get_charge to R4.
+    for token in tokens:
+        match = _token_verb(token)
+        if match is not None:
+            return match
     return None
 
 
