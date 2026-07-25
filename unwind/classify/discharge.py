@@ -61,23 +61,23 @@ _EXTERNAL_VERB_WORDS = frozenset(
         "sms",
     }
 )
+# STRONG, unambiguous time-window terms only. Weak words like "within", "pending",
+# "grace", "timeout", "window" are common English (e.g. "within the allowed
+# directories") and cause false HALF_LIFE positives on ordinary writes, so they
+# are excluded. Matched as WHOLE WORDS, never substrings.
 _HALF_LIFE_WORDS = frozenset(
     {
-        "window",
         "expire",
+        "expires",
         "expiry",
         "settle",
+        "settled",
         "settlement",
         "recall",
-        "void",
-        "retention",
-        "within",
-        "timeout",
-        "deadline",
-        "grace",
-        "pending",
         "unsend",
         "retract",
+        "voidable",
+        "chargeback",
     }
 )
 _OBSERVATION_WORDS = frozenset(
@@ -130,7 +130,6 @@ def discharge_schema_graph(
     cls = classify_lexical(spec)
     verb = cls.effect_verb
     name_toks = set(tokenize(spec.name))
-    text = f"{spec.name} {spec.description}".lower()
 
     if w.type == WitnessType.EXTERNALITY:
         # Confirmed if the tool's own effect is external, the environment leaks,
@@ -146,12 +145,12 @@ def discharge_schema_graph(
         return Verdict.REFUTED, 0.0
 
     if w.type == WitnessType.HALF_LIFE:
-        if (
-            env.retention_window_s is not None
-            or (set(text.split()) & _HALF_LIFE_WORDS)
-            or any(word in text for word in _HALF_LIFE_WORDS)
-        ):
-            # A window is named; we cannot verify expiry without a clock → suspect.
+        # A half-life implies a time-bounded, typically external/transactional
+        # action — confirmed by an explicit retention window on the environment,
+        # or a STRONG whole-word window term in the tool text. A plain local
+        # mutation (file write) has no half-life regardless of prose.
+        text_tokens = set(tokenize(f"{spec.name} {spec.description}"))
+        if env.retention_window_s is not None or (text_tokens & _HALF_LIFE_WORDS):
             return Verdict.CONFIRMED, 0.85
         return Verdict.REFUTED, 0.0
 

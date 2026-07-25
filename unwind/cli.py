@@ -91,25 +91,36 @@ def run(
 
 
 @app.command(context_settings=_EXTRA)
-def classify(ctx: typer.Context, use_llm: bool = typer.Option(False, "--llm")) -> None:
+def classify(
+    ctx: typer.Context,
+    use_llm: bool = typer.Option(False, "--llm"),
+    witness: bool = typer.Option(
+        False, "--witness", help="Apply WITNESS discharged-refutation hardening (offline)."
+    ),
+) -> None:
     """Classify every tool a server exposes and print the R0–R4 table."""
     command, args = _split_cmd(ctx.args)
-    specs = anyio.run(_classify_server, command, args, use_llm)
+    specs = anyio.run(_classify_server, command, args, use_llm, witness)
     table = Table(title=f"Reversibility of {command} {' '.join(args)}")
     table.add_column("Tool")
     table.add_column("Class")
     table.add_column("Verb")
     table.add_column("Conf", justify="right")
     table.add_column("Undo via")
-    for spec, plan in specs:
+    if witness:
+        table.add_column("WITNESS")
+    for spec, plan, wit in specs:
         style = _RCLASS_STYLE.get(spec.rev_class.name, "white")
-        table.add_row(
+        row = [
             spec.name,
             f"[{style}]{spec.rev_class.name} {spec.rev_class.label}[/{style}]",
             spec.effect_verb.value,
             f"{spec.confidence:.2f}",
             (plan.inverse_tool or "—") if plan else "—",
-        )
+        ]
+        if witness:
+            row.append(", ".join(wit) if wit else "—")
+        table.add_row(*row)
     console.print(table)
 
 
@@ -212,7 +223,7 @@ def version() -> None:
 
 
 # -- async helpers -------------------------------------------------------
-async def _classify_server(command: str, args: list[str], use_llm: bool):  # type: ignore[no-untyped-def]
+async def _classify_server(command: str, args: list[str], use_llm: bool, witness: bool = False):  # type: ignore[no-untyped-def]
     from unwind.engine import ReversibilityEngine
     from unwind.undolog.store import UndoLog
     from unwind.upstream import McpUpstream
@@ -220,7 +231,22 @@ async def _classify_server(command: str, args: list[str], use_llm: bool):  # typ
     async with McpUpstream(command, args) as up:
         eng = ReversibilityEngine(up, UndoLog(":memory:"), use_llm=use_llm)
         specs = await eng.build_catalog()
-    return [(s, eng.plans.get(s.name)) for s in specs]
+
+    if not witness:
+        return [(s, eng.plans.get(s.name), []) for s in specs]
+
+    # Apply WITNESS discharged-refutation hardening over the crawled toolset.
+    from unwind.classify.discharge import DeterministicProposer, discharge_schema_graph
+    from unwind.classify.witness import classify_witness
+
+    proposer = DeterministicProposer()
+    out = []
+    for s in specs:
+        plan = eng.plans.get(s.name)
+        wr = classify_witness(s, specs, eng.env, proposer, discharge_schema_graph, plan=plan)
+        hardened = s.model_copy(update={"rev_class": wr.classification.rev_class})
+        out.append((hardened, plan, [w.type.value for w in wr.confirmed]))
+    return out
 
 
 async def _undo_against(command: str, args: list[str], db: str, n: int):  # type: ignore[no-untyped-def]
