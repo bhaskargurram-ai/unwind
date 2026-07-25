@@ -168,16 +168,31 @@ def discharge_schema_graph(
 
     if w.type == WitnessType.MISSING_SNAPSHOT_CASCADE:
         reader = find_prestate_reader(spec, toolset)
-        destructive = verb in (EffectVerb.DELETE, EffectVerb.UPDATE)
-        if destructive and reader is None and not env.supports_snapshot and not env.versioned:
+        mutating = verb in (
+            EffectVerb.DELETE,
+            EffectVerb.UPDATE,
+            EffectVerb.CREATE,
+            EffectVerb.MOVE,
+            EffectVerb.EXECUTE,
+        )
+        has_env_recovery = env.versioned or env.has_trash or env.soft_delete
+        no_inverse = plan is None or plan.inverse_tool is None
+        # A mutation with NO available inverse tool AND no environmental recovery
+        # cannot be reversed — whether it is a delete whose pre-state cannot be
+        # captured or a create with no sibling delete in the server. This is the
+        # panel's "missing-inverse" case; without it a create_table with no
+        # drop_table stays optimistically R2. (Golden rule #3: no inverse → no
+        # undo promise.)
+        if mutating and no_inverse and not has_env_recovery:
             return Verdict.CONFIRMED, 0.9
+        # A destructive overwrite/delete whose prior state cannot be snapshotted.
         if (
-            destructive
+            verb in (EffectVerb.DELETE, EffectVerb.UPDATE)
             and reader is None
-            and not env.versioned
-            and not (env.has_trash or env.soft_delete)
+            and not env.supports_snapshot
+            and not has_env_recovery
         ):
-            return Verdict.CONFIRMED, 0.75
+            return Verdict.CONFIRMED, 0.85
         return Verdict.REFUTED, 0.0
 
     return Verdict.UNTESTABLE, 0.0
