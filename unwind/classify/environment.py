@@ -58,6 +58,21 @@ def rederive(classification: Classification, env: EnvironmentDescriptor) -> Clas
         new = ReversibilityClass.R2
         notes.append("no snapshot capability → R1 unreachable, degraded to R2")
 
+    # DECISION: a destructive OVERWRITE (update) with neither a capturable
+    # pre-state nor version history has no more inverse than a hard delete — the
+    # prior bytes are gone and unrecoverable. Harden to R4. (Independent of the
+    # WITNESS mechanism; closes the one internal write_file-versionless miss the
+    # ensemble made. Pinned by a test.)
+    if (
+        verb == EffectVerb.UPDATE
+        and not env.supports_snapshot
+        and not env.versioned
+        and not env.has_trash
+        and not env.soft_delete
+    ):
+        new = max(new, ReversibilityClass.R4)
+        notes.append("destructive overwrite, no snapshot/version history → R4")
+
     # Environments whose actions inherently leak to third parties push R2→R3.
     if env.external_side_effects and new == ReversibilityClass.R2:
         new = ReversibilityClass.R3

@@ -41,13 +41,24 @@ class TestDeleteRederivation:
 
 
 class TestSnapshotDegradation:
-    def test_no_snapshot_degrades_r1_to_r2(self) -> None:
+    def test_no_snapshot_no_recovery_hardens_update_to_r4(self) -> None:
+        # A destructive overwrite with no capturable pre-state AND no version
+        # history / trash has no more inverse than a hard delete → R4 (the
+        # independent env-rule contribution; closes the write_file-versionless miss).
         cls = Classification(
             rev_class=ReversibilityClass.R1, confidence=0.5, effect_verb=EffectVerb.UPDATE
         )
         env = EnvironmentDescriptor(supports_snapshot=False)
-        out = rederive(cls, env)
-        assert out.rev_class == ReversibilityClass.R2
+        assert rederive(cls, env).rev_class == ReversibilityClass.R4
+
+    def test_no_snapshot_with_trash_degrades_r1_to_r2(self) -> None:
+        # With trash recovery present, the R4 hardening does NOT fire; the missing
+        # snapshot only blocks R1, degrading to R2.
+        cls = Classification(
+            rev_class=ReversibilityClass.R1, confidence=0.5, effect_verb=EffectVerb.UPDATE
+        )
+        env = EnvironmentDescriptor(supports_snapshot=False, has_trash=True)
+        assert rederive(cls, env).rev_class == ReversibilityClass.R2
 
     def test_snapshot_ok_keeps_r1(self) -> None:
         cls = Classification(

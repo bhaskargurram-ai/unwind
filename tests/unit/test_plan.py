@@ -41,8 +41,14 @@ class TestSynthesizePlan:
         plan = synthesize_plan(create, [create, delete], EnvironmentDescriptor())
         assert plan.inverse_tool == "delete_page"
         assert plan.inverse_template.get("__bind_id_from_result__") is True
-        # Strong structural match (score 1.0) -> SEMANTIC fidelity, high confidence.
-        assert plan.fidelity_grade == FidelityGrade.SEMANTIC
+        # Fidelity is PROVISIONAL until executed: a lexical antonym match is
+        # evidence an inverse EXISTS, not that it RESTORES state, so an unexecuted
+        # plan is capped at ACCEPTABLE_APPROXIMATION (never a false SEMANTIC).
+        assert plan.fidelity_grade == FidelityGrade.ACCEPTABLE_APPROXIMATION
+        # But a confident structural match still yields the R2 (compensable) class.
+        from unwind.synthesize.plan import effective_class
+
+        assert effective_class(plan, ReversibilityClass.R4) == ReversibilityClass.R2
         assert effective_class(plan, ReversibilityClass.R2) == ReversibilityClass.R2
 
     def test_send_has_no_inverse_failed_plan(self) -> None:

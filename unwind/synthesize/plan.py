@@ -68,15 +68,15 @@ def synthesize_plan(
 
     # --- Case B: compensable (R2) — a sibling inverse tool exists
     if candidate is not None and candidate.score >= 0.5:
-        # Fidelity depends on how strong the structural match is.
-        if candidate.score >= 0.85:
-            fidelity = FidelityGrade.SEMANTIC
-            confidence = candidate.score
-        else:
-            # Weak match: acceptable approximation at best, and low confidence
-            # must NOT masquerade as a firm undo → caller degrades the class.
-            fidelity = FidelityGrade.ACCEPTABLE_APPROXIMATION
-            confidence = candidate.score * 0.8
+        # DECISION (invariant I3): fidelity is PROVISIONAL until measured. A
+        # lexical antonym score is evidence an inverse *exists*, not that it
+        # *restores state* — asserting SEMANTIC from a structural score alone
+        # manufactures a false undo guarantee (golden rule #3). We therefore cap
+        # unexecuted plans at ACCEPTABLE_APPROXIMATION; only live sandbox
+        # validation (validate.py) or a discharged WITNESS may raise it to
+        # SEMANTIC/EXACT. Confidence still tracks structural-match strength.
+        fidelity = FidelityGrade.ACCEPTABLE_APPROXIMATION
+        confidence = candidate.score if candidate.score >= 0.85 else candidate.score * 0.8
         return CompensationPlan(
             pre_read=reader.name if reader else None,
             forward=target.name,
@@ -116,13 +116,20 @@ def effective_class(plan: CompensationPlan, base: ReversibilityClass) -> Reversi
         # No inverse: cannot be better than R3 (mitigable) and never R0–R2.
         return max(base, ReversibilityClass.R3)
 
-    if plan.fidelity_grade >= FidelityGrade.SEMANTIC and plan.confidence >= 0.7:
-        if plan.inverse_tool == plan.forward:
-            return ReversibilityClass.R1
+    # A self-reversal backed by a captured snapshot (exact fidelity) is R1.
+    if (
+        plan.inverse_tool == plan.forward
+        and plan.fidelity_grade >= FidelityGrade.SEMANTIC
+        and plan.confidence >= 0.7
+    ):
+        return ReversibilityClass.R1
+
+    # A confident inverse — whether its fidelity is proven SEMANTIC by execution
+    # or only structurally an ACCEPTABLE-approximation — supports R2 (compensable).
+    # We keep the class at R2 while reporting the graded fidelity honestly; the
+    # over-promise rule bites on the *fidelity grade*, not the class here.
+    if plan.fidelity_grade >= FidelityGrade.ACCEPTABLE_APPROXIMATION and plan.confidence >= 0.7:
         return ReversibilityClass.R2
 
-    if plan.fidelity_grade >= FidelityGrade.ACCEPTABLE_APPROXIMATION and plan.confidence >= 0.4:
-        # Weak compensation: degrade R2→R3 and escalate (golden rule #3).
-        return max(base, ReversibilityClass.R3)
-
+    # Weak / low-confidence compensation: degrade and escalate (golden rule #3).
     return max(base, ReversibilityClass.R3)

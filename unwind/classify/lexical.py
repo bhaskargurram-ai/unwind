@@ -253,10 +253,19 @@ def tokenize(name: str) -> list[str]:
 
 def _match_verb(tokens: list[str]) -> tuple[EffectVerb, ReversibilityClass] | None:
     token_set = set(tokens)
+    # Mutation verbs win over R0 read verbs when both appear: `write_query`,
+    # `update_and_get`, `create_or_replace` are mutations, not reads. So we test
+    # the non-R0 (mutating) rules first and only fall back to R0 (nullipotent)
+    # when no mutation verb is present. This is also the fail-safe order (golden
+    # rule #2: don't assume an action is nullipotent).
     for keywords, verb, rclass in _VERB_RULES:
+        if rclass == ReversibilityClass.R0:
+            continue
         if token_set & keywords:
             return verb, rclass
-    # Fall back to the leading token as a weak signal.
+    for keywords, verb, rclass in _VERB_RULES:
+        if rclass == ReversibilityClass.R0 and token_set & keywords:
+            return verb, rclass
     return None
 
 
