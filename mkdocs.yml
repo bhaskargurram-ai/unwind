@@ -150,6 +150,7 @@ nav:
   - Concepts:
       - Reversibility taxonomy: concepts/taxonomy.md
       - Compensation synthesis: concepts/compensation.md
+      - "WITNESS (discharged refutation)": concepts/witness.md
       - Architecture: concepts/architecture.md
   - Agentic tools: agentic-tools.md
   - Reversibility index: reversibility-index.md
