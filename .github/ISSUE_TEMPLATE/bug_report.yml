@@ -84,9 +84,9 @@ body:
     attributes:
       label: How did you install Unwind?
       options:
-        - pip (unwind-mcp)
+        - pip (rollback-mcp)
         - uvx
-        - npm (unwind-mcp)
+        - npm (rollback-mcp)
         - Docker (ghcr.io/bhaskargurram-ai/unwind)
         - from source
     validations:

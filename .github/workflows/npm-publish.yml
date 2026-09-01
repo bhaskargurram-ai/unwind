@@ -9,16 +9,44 @@ on:
 permissions:
   contents: read
 
+# ---------------------------------------------------------------------------
+# ONE-TIME SETUP (npm Trusted Publishing / OIDC — no stored token, for repeat
+# publishes of an EXISTING package):
+#   1. On npmjs.com -> package `rollback-mcp` -> Settings -> Trusted Publisher:
+#        Publisher:         GitHub Actions
+#        Organization/user: bhaskargurram-ai
+#        Repository:        unwind
+#        Workflow filename: npm-publish.yml
+#        Environment:       (leave blank unless one is added to this job)
+#   2. Allowed action for that trusted publisher: `npm publish`.
+#   3. Requires npm CLI >= 11.5.1 and Node >= 22.14.0 in the runner (both are
+#      pinned/enforced below) plus `id-token: write` (already present).
+#
+# CAVEAT: npm's docs do not state whether a brand-new package can be published
+# for the FIRST time via OIDC — the trusted-publisher setting lives in package
+# settings that presuppose the package already exists on the registry. So the
+# very first `npm publish` for `rollback-mcp` may still need a one-time
+# classic automation token, stored by Bhaskar as the NPM_TOKEN repo secret.
+# Once that first publish succeeds and the trusted publisher is configured per
+# the steps above, delete the NPM_TOKEN secret and OIDC takes over — nothing
+# else in this workflow needs to change to make that switch.
+#
+# Fallback path (commented out, NOT active): if OIDC publish ever fails before
+# a trusted publisher exists for this package, temporarily uncomment the
+# `NODE_AUTH_TOKEN` line below and re-add the NPM_TOKEN secret.
+# ---------------------------------------------------------------------------
+
 jobs:
   publish:
-    name: Publish unwind-mcp to npm
+    name: Publish rollback-mcp to npm
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ts
     permissions:
       contents: read
-      # Required for npm build provenance attestations (--provenance).
+      # Required for npm build provenance attestations (--provenance) and for
+      # npm Trusted Publishing (OIDC) authentication.
       id-token: write
     steps:
       - uses: actions/checkout@v4
@@ -26,10 +54,13 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "22.14.0"
           registry-url: "https://registry.npmjs.org"
           cache: "npm"
           cache-dependency-path: ts/package-lock.json
+
+      - name: Ensure npm >= 11.5.1 (required for Trusted Publishing / OIDC)
+        run: npm install -g npm@latest
 
       - name: Install
         run: npm ci
@@ -40,10 +71,15 @@ jobs:
       - name: Test
         run: npm test
 
-      - name: Publish (with provenance)
+      - name: Publish (Trusted Publishing / OIDC, with provenance)
         run: npm publish --provenance --access public
-        env:
-          # NOTE: npm OIDC trusted publishing is not yet GA, so an automation
-          # token is still required. Store it as the NPM_TOKEN repo secret and
-          # migrate to OIDC once npm ships it (then this env can be dropped).
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # No NODE_AUTH_TOKEN here — authentication is via npm Trusted
+        # Publishing (OIDC), once the trusted publisher is configured per the
+        # ONE-TIME SETUP comment above.
+        #
+        # env:
+        #   # FALLBACK ONLY — first-ever publish of a brand-new package, or if
+        #   # OIDC publish fails before the trusted publisher exists. Re-add
+        #   # the NPM_TOKEN repo secret before uncommenting, then remove both
+        #   # again once the trusted publisher takes over.
+        #   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

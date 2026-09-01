@@ -3,8 +3,8 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "unwind-mcp"
-version = "0.1.0"
+name = "rollback-mcp"
+version = "0.2.0"
 description = "A reversibility layer for agentic tool use — a transparent MCP proxy that classifies which tool calls can be taken back, synthesises inverse operations, keeps a durable cross-server undo log, and interrupts you only for genuinely irreversible actions."
 readme = "README.md"
 requires-python = ">=3.11"

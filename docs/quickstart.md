@@ -17,7 +17,7 @@ Get Unwind wrapping a real MCP server, run the demo, and take an action back —
 === "pip"
 
     ```bash
-    pip install unwind-mcp
+    pip install rollback-mcp
     unwind --version
     ```
 
@@ -25,13 +25,13 @@ Get Unwind wrapping a real MCP server, run the demo, and take an action back —
 
     ```bash
     # Runs the latest release in an ephemeral environment.
-    uvx unwind-mcp --version
+    uvx rollback-mcp --version
     ```
 
 === "npm (Node stdio shim)"
 
     ```bash
-    npm install -g unwind-mcp
+    npm install -g rollback-mcp
     unwind --version
     ```
 

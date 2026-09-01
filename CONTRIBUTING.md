@@ -52,7 +52,7 @@ make lint typecheck test conformance
 
 ### The TypeScript shim (`ts/`)
 
-The stdio shim has a TypeScript port published as `unwind-mcp` on npm.
+The stdio shim has a TypeScript port published as `rollback-mcp` on npm.
 
 ```bash
 cd ts

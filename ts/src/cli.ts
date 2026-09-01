@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * `unwind-mcp` CLI — the transparent MCP stdio shim.
+ * `rollback-mcp` CLI — the transparent MCP stdio shim.
  *
  * Usage:
- *   unwind-mcp run [--passthrough-only] -- <upstream command...>
+ *   rollback-mcp run [--passthrough-only] -- <upstream command...>
  *
  * Example (wrap the official filesystem server):
- *   unwind-mcp run -- npx -y @modelcontextprotocol/server-filesystem /path
+ *   rollback-mcp run -- npx -y @modelcontextprotocol/server-filesystem /path
  *
  * All logging goes to *stderr*; stdout is reserved for the byte-faithful client
  * channel (GOLDEN RULE #1). The child's exit code is propagated as ours.
@@ -26,7 +26,7 @@ function log(event: string, fields: Record<string, unknown>): void {
 export function buildProgram(): Command {
   const program = new Command();
   program
-    .name("unwind-mcp")
+    .name("rollback-mcp")
     .description(
       "Transparent MCP stdio proxy — a reversibility layer for agentic tool use.",
     )

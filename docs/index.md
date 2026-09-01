@@ -33,19 +33,19 @@ That last line is the whole thesis in one screenshot, and it is honest: the emai
 === "pip"
 
     ```bash
-    pip install unwind-mcp
+    pip install rollback-mcp
     ```
 
 === "uvx (no install)"
 
     ```bash
-    uvx unwind-mcp run -- npx -y @modelcontextprotocol/server-filesystem /work
+    uvx rollback-mcp run -- npx -y @modelcontextprotocol/server-filesystem /work
     ```
 
 === "npm (stdio shim)"
 
     ```bash
-    npm install -g unwind-mcp
+    npm install -g rollback-mcp
     ```
 
 === "docker"

@@ -1,8 +1,8 @@
-# unwind-mcp
+# rollback-mcp
 
 **A transparent MCP stdio proxy — the reversibility layer for agentic tool use.**
 
-`unwind-mcp` sits between an MCP client and an upstream MCP server. It pumps
+`rollback-mcp` sits between an MCP client and an upstream MCP server. It pumps
 newline-delimited JSON-RPC between the two, forwarding **every message
 byte-faithfully**, while *observing* the traffic: it annotates `tools/list`
 responses with a lexical reversibility hint (`x-unwind`) and logs observed
@@ -34,29 +34,29 @@ description. Existing fields are never removed or rewritten.
 ## Install
 
 ```sh
-npm i -g unwind-mcp
+npm i -g rollback-mcp
 ```
 
 ## Usage
 
 ```sh
-unwind-mcp run [--passthrough-only] -- <upstream command...>
+rollback-mcp run [--passthrough-only] -- <upstream command...>
 ```
 
 Wrap the official filesystem server:
 
 ```sh
-unwind-mcp run -- npx -y @modelcontextprotocol/server-filesystem /path/to/dir
+rollback-mcp run -- npx -y @modelcontextprotocol/server-filesystem /path/to/dir
 ```
 
 In an MCP client config (`mcp.json`), replace the upstream command with the
-`unwind-mcp` wrapper:
+`rollback-mcp` wrapper:
 
 ```json
 {
   "mcpServers": {
     "filesystem": {
-      "command": "unwind-mcp",
+      "command": "rollback-mcp",
       "args": ["run", "--", "npx", "-y", "@modelcontextprotocol/server-filesystem", "/path/to/dir"]
     }
   }

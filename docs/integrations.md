@@ -16,14 +16,14 @@ Wrap any upstream server with `unwind run -- <server command>` and point your cl
 === "pip"
 
     ```bash
-    pip install unwind-mcp
+    pip install rollback-mcp
     unwind run -- <your server command>
     ```
 
 === "npm"
 
     ```bash
-    npm install -g unwind-mcp
+    npm install -g rollback-mcp
     unwind run -- <your server command>
     ```
 
@@ -71,8 +71,8 @@ Unwind is wired into the standard open-source toolchain so the project is reprod
 
 | Service | Role |
 |---|---|
-| **PyPI** — `unwind-mcp` | Python distribution; `pip install unwind-mcp`. |
-| **npm** — `unwind-mcp` | Node stdio shim. |
+| **PyPI** — `rollback-mcp` | Python distribution; `pip install rollback-mcp`. |
+| **npm** — `rollback-mcp` | Node stdio shim. |
 | **GHCR** | Container images at `ghcr.io/bhaskargurram-ai/unwind`, published on tagged releases. |
 | **Homebrew** | `brew install` tap for the CLI (TBD at launch). |
 | **Codecov** | Coverage reporting; `eval/` coverage gate ≥80%. |

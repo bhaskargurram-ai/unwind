@@ -1,10 +1,10 @@
 {
-  "name": "unwind-mcp",
-  "version": "0.1.0",
+  "name": "rollback-mcp",
+  "version": "0.2.0",
   "description": "Transparent MCP stdio proxy — a reversibility layer for agentic tool use. TypeScript port of the Unwind stdio shim.",
   "type": "module",
   "bin": {
-    "unwind-mcp": "dist/cli.js"
+    "rollback-mcp": "dist/cli.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -232,7 +232,7 @@ unwind/
 ├── CLAUDE.md                    # Claude Code working context
 ├── PROJECT.md                   # this document
 ├── LICENSE                      # Apache-2.0
-├── pyproject.toml               # pip install unwind-mcp
+├── pyproject.toml               # pip install rollback-mcp
 ├── Makefile                     # test | lint | results | demo | bench
 ├── .github/workflows/ci.yml
 ├── unwind/

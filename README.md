@@ -8,8 +8,8 @@
 
 [![CI](https://github.com/bhaskargurram-ai/unwind/actions/workflows/ci.yml/badge.svg)](https://github.com/bhaskargurram-ai/unwind/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/bhaskargurram-ai/unwind/branch/main/graph/badge.svg)](https://codecov.io/gh/bhaskargurram-ai/unwind)
-[![PyPI](https://img.shields.io/pypi/v/unwind-mcp?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/unwind-mcp/)
-[![npm](https://img.shields.io/npm/v/unwind-mcp?logo=npm&label=npm)](https://www.npmjs.com/package/unwind-mcp)
+[![PyPI](https://img.shields.io/pypi/v/rollback-mcp?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/rollback-mcp/)
+[![npm](https://img.shields.io/npm/v/rollback-mcp?logo=npm&label=npm)](https://www.npmjs.com/package/rollback-mcp)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/bhaskargurram-ai/unwind/badge)](https://securityscorecards.dev/viewer/?uri=github.com/bhaskargurram-ai/unwind)
@@ -70,9 +70,9 @@ Three actions come back. The fourth is flagged honestly — because a false undo
 ## One-line install
 
 ```bash
-pip install unwind-mcp          # pip
-uvx unwind-mcp --help           # zero-install, via uv
-npm i -g unwind-mcp             # Node / TypeScript stdio shim
+pip install rollback-mcp        # pip
+uvx rollback-mcp --help         # zero-install, via uv
+npm i -g rollback-mcp           # Node / TypeScript stdio shim
 docker run ghcr.io/bhaskargurram-ai/unwind --help
 ```
 

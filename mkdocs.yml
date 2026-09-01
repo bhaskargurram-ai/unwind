@@ -73,11 +73,11 @@ extra:
       link: https://github.com/bhaskargurram-ai/unwind
       name: Unwind on GitHub
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/unwind-mcp/
-      name: unwind-mcp on PyPI
+      link: https://pypi.org/project/rollback-mcp/
+      name: rollback-mcp on PyPI
     - icon: fontawesome/brands/npm
-      link: https://www.npmjs.com/package/unwind-mcp
-      name: unwind-mcp on npm
+      link: https://www.npmjs.com/package/rollback-mcp
+      name: rollback-mcp on npm
   # Analytics placeholder — set provider + property to enable (opt-in only).
   # analytics:
   #   provider: google

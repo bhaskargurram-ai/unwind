@@ -61,7 +61,7 @@ Releases are engineered to be verifiable end to end:
 - **Sigstore keyless signing.** Release artifacts (Python and npm distributions) are
   signed with [Sigstore](https://www.sigstore.dev/)/cosign; signatures (`.sig` /
   bundle) are attached to each GitHub release.
-- **PyPI Trusted Publishing (OIDC).** The PyPI package `unwind-mcp` is published via
+- **PyPI Trusted Publishing (OIDC).** The PyPI package `rollback-mcp` is published via
   GitHub OIDC with no long-lived token — provenance is attested by the workflow.
 - **npm provenance.** The npm package is published with `--provenance`.
 - **SBOM.** A CycloneDX Software Bill of Materials is generated and attached to each
@@ -73,7 +73,7 @@ environments. Instructions accompany each release.
 ## Scope
 
 In scope: the `unwind` proxy, its classification/synthesis/undo-log/policy code, the
-CLI, the Python package `unwind-mcp`, the TypeScript shim, and the published Docker
+CLI, the Python package `rollback-mcp`, the TypeScript shim, and the published Docker
 image. Out of scope: vulnerabilities in upstream MCP servers Unwind wraps, in MCP
 clients, or in third-party dependencies (report those upstream, though we appreciate a
 heads-up so we can pin or patch).

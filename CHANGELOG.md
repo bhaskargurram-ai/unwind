@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## [0.2.0] (2026-09-01)
+
+### Chores
+
+- **BREAKING (distribution only)**: renamed the published package from
+  `unwind-mcp` to `rollback-mcp` on both PyPI and npm. The name `unwind-mcp`
+  collided with an unrelated, unaffiliated project already published on PyPI
+  (a different author, AGPL-3.0, published March 2026); it was never
+  registered by this project. `rollback-mcp` was confirmed free on PyPI, npm,
+  and GitHub before adoption.
+
+  The Python import path (`import unwind`), the console script (`unwind`),
+  the project/product name "Unwind", the repository, and the
+  `ghcr.io/bhaskargurram-ai/unwind` image path are all unchanged — only the
+  installable package name changes:
+
+  - `pip install unwind-mcp` -> `pip install rollback-mcp`
+  - `uvx unwind-mcp` -> `uvx rollback-mcp`
+  - `npm i -g unwind-mcp` -> `npm i -g rollback-mcp`
+
+
 ## v0.1.0 (2026-07-24)
 
 ### Chores

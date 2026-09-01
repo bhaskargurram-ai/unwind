@@ -1,10 +1,10 @@
 /**
- * Public API surface for `unwind-mcp` (the TypeScript stdio shim).
+ * Public API surface for `rollback-mcp` (the TypeScript stdio shim).
  *
  * This mirrors the Python reference implementation's stdio proxy. The Python
  * package remains authoritative for classification, compensation synthesis and
  * the undo log; this shim ports only the transparent stdio proxy so the Node
- * MCP-client audience can `npm i -g unwind-mcp`.
+ * MCP-client audience can `npm i -g rollback-mcp`.
  */
 export { VERSION } from "./version.js";
 export { StdioProxy } from "./proxy.js";

@@ -10,7 +10,7 @@ rules that govern every design decision in this package.
 
 from __future__ import annotations
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from unwind.types import (
     BlastRadius,

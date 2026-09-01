@@ -11,7 +11,7 @@ permissions:
 
 # ---------------------------------------------------------------------------
 # ONE-TIME SETUP (PyPI Trusted Publishing / OIDC — no stored token):
-#   1. Create the project `unwind-mcp` on https://pypi.org (or reserve it).
+#   1. Create the project `rollback-mcp` on https://pypi.org (or reserve it).
 #   2. On PyPI → Manage → Publishing → "Add a new pending publisher":
 #        Owner:            bhaskargurram-ai
 #        Repository name:  unwind
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/unwind-mcp/
+      url: https://pypi.org/project/rollback-mcp/
     permissions:
       # Mandatory for OIDC Trusted Publishing. NO PyPI token is used.
       id-token: write

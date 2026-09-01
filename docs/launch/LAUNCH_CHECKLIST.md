@@ -40,10 +40,10 @@ amd64-only except on tags, moved Benchmark to PR-only, set Dependabot to monthly
 ---
 
 ## 0. State at handoff (already done)
-- ✅ Python package `unwind-mcp` — transparent MCP proxy, R0–R4 classifier,
+- ✅ Python package `rollback-mcp` — transparent MCP proxy, R0–R4 classifier,
   compensation synthesis, durable undo log, escalation policy, `unwind.*` agentic tools.
 - ✅ Works against **real** MCP servers (verified live vs `@modelcontextprotocol/server-filesystem`).
-- ✅ TypeScript stdio shim in `ts/` (`unwind-mcp` on npm), 51 tests passing.
+- ✅ TypeScript stdio shim in `ts/` (`rollback-mcp` on npm), 51 tests passing.
 - ✅ ReversiBench (`bench/`) + 5-family eval harness (`eval/`) with hand-computed fixtures.
 - ✅ Full CI/CD: lint/type/test matrix (3 OS × 3 Py), mandatory conformance gate,
   CodeQL, Docker→GHCR, release, PyPI/npm (OIDC), docs, SBOM, signing — all wired.
@@ -52,11 +52,14 @@ amd64-only except on tags, moved Benchmark to PR-only, set Dependabot to monthly
 - ✅ Research paper scaffolded in `paper/` and **hard-gitignored** (never committed).
 
 ## 1. External service setup (one-time, needs your accounts)
-- [ ] **PyPI Trusted Publisher**: create the `unwind-mcp` project on PyPI → *Publishing* →
+- [ ] **PyPI Trusted Publisher**: create the `rollback-mcp` project on PyPI → *Publishing* →
       add a GitHub trusted publisher: owner `bhaskargurram-ai`, repo `unwind`,
       workflow `pypi-publish.yml`. No token needed (OIDC).
-- [ ] **npm**: create the `unwind-mcp` package; add `NPM_TOKEN` repo secret
-      (or wait for npm OIDC GA and drop it — `npm-publish.yml` already sets `--provenance`).
+- [ ] **npm**: npm Trusted Publishing (OIDC) is now GA — `npm-publish.yml` is already
+      wired for it (see the ONE-TIME SETUP comment at the top of that file). The first
+      publish of the brand-new `rollback-mcp` package may still need a one-time
+      `NPM_TOKEN` repo secret (npm's docs don't confirm OIDC works before the package
+      exists); delete that secret once the trusted publisher is configured.
 - [ ] **Codecov**: link the repo at codecov.io (public repos need no token; else add `CODECOV_TOKEN`).
 - [ ] **Discord**: create a server + invite; replace the `TBD` invite link in
       `README.md`, `SUPPORT.md`, `docs/`.

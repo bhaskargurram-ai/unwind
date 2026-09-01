@@ -18,8 +18,8 @@ authors:
 repository-code: "https://github.com/bhaskargurram-ai/unwind"
 url: "https://bhaskargurram-ai.github.io/unwind/"
 license: Apache-2.0
-version: 0.1.0
-date-released: "2026-07-23"
+version: 0.2.0
+date-released: "2026-09-01"
 keywords:
   - model-context-protocol
   - mcp
