@@ -20,11 +20,14 @@ Wrap any upstream server with `unwind run -- <server command>` and point your cl
     unwind run -- <your server command>
     ```
 
-=== "npm"
+=== "TypeScript shim (from source)"
+
+    Not published to npm. Clone and build:
 
     ```bash
-    npm install -g rollback-mcp
-    unwind run -- <your server command>
+    git clone https://github.com/bhaskargurram-ai/unwind && cd unwind/ts
+    npm install && npm run build
+    node dist/cli.js run -- <your server command>
     ```
 
 === "docker"
@@ -72,7 +75,7 @@ Unwind is wired into the standard open-source toolchain so the project is reprod
 | Service | Role |
 |---|---|
 | **PyPI** — `rollback-mcp` | Python distribution; `pip install rollback-mcp`. |
-| **npm** — `rollback-mcp` | Node stdio shim. |
+| **npm** | Not published — the Node/TypeScript stdio shim (`ts/`) is built from source only (`npm install && npm run build` in `ts/`). |
 | **GHCR** | Container images at `ghcr.io/bhaskargurram-ai/unwind`, published on tagged releases. |
 | **Homebrew** | `brew install` tap for the CLI (TBD at launch). |
 | **Codecov** | Coverage reporting; `eval/` coverage gate ≥80%. |

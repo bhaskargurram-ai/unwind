@@ -61,8 +61,10 @@ Maintainers who become inactive for an extended period may be moved to emeritus 
 - Trunk-based; `main` is always green.
 - Versioning is **automated from Conventional Commits** via `python-semantic-release`
   on merge to `main` (see [`CONTRIBUTING.md`](./CONTRIBUTING.md)).
-- Tags `v*` trigger PyPI (Trusted Publishing/OIDC), npm (`--provenance`), Docker
-  (GHCR), SBOM generation, and Sigstore signing.
+- Tags `v*` trigger PyPI (Trusted Publishing/OIDC), Docker (GHCR), SBOM
+  generation, and Sigstore signing. The TypeScript shim in `ts/` is built
+  from source and is not published to npm; `npm-publish.yml` exists but is
+  manual-trigger-only, not tag-triggered.
 - Semantic versioning; the [`CHANGELOG.md`](./CHANGELOG.md) follows Keep a Changelog.
 
 ## Deprecation policy

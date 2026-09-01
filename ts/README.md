@@ -12,8 +12,8 @@ This is the **TypeScript port of the Unwind stdio shim**. The
 [Python package](https://github.com/bhaskargurram-ai/unwind) is the reference
 implementation and remains authoritative for full reversibility classification,
 compensation synthesis, and the durable cross-server undo log. This shim mirrors
-just the transparent stdio proxy so the large Node MCP-client audience can adopt
-it in one line.
+just the transparent stdio proxy so the Node MCP-client audience can build and
+run it from source without the Python runtime.
 
 ## Design invariants
 
@@ -33,20 +33,30 @@ description. Existing fields are never removed or rewritten.
 
 ## Install
 
+**Not published to npm.** Build it from source:
+
 ```sh
-npm i -g rollback-mcp
+git clone https://github.com/bhaskargurram-ai/unwind
+cd unwind/ts
+npm install
+npm run build
+```
+
+Then run the built CLI directly, or `npm link` to expose the `rollback-mcp`
+command on your `PATH`:
+
+```sh
+node dist/cli.js run [--passthrough-only] -- <upstream command...>
+# or, after `npm link`:
+rollback-mcp run [--passthrough-only] -- <upstream command...>
 ```
 
 ## Usage
 
-```sh
-rollback-mcp run [--passthrough-only] -- <upstream command...>
-```
-
 Wrap the official filesystem server:
 
 ```sh
-rollback-mcp run -- npx -y @modelcontextprotocol/server-filesystem /path/to/dir
+node dist/cli.js run -- npx -y @modelcontextprotocol/server-filesystem /path/to/dir
 ```
 
 In an MCP client config (`mcp.json`), replace the upstream command with the

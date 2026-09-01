@@ -55,8 +55,9 @@ green.
 - **DoD:** all five metric families reported with CIs.
 
 ### W7 — Polish + TypeScript stdio shim + launch ⬜
-- README with the demo GIF, one-line install, PyPI + npm publish, docs site,
-  `good-first-issue` labels.
+- README with the demo GIF, one-line install, PyPI publish (TypeScript shim
+  built from source, not published to npm), docs site, `good-first-issue`
+  labels.
 - **DoD:** `v0.1.0` tagged and published.
 
 ### W8 — Paper ⬜

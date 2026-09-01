@@ -43,10 +43,13 @@ amd64-only except on tags, moved Benchmark to PR-only, set Dependabot to monthly
 - ✅ Python package `rollback-mcp` — transparent MCP proxy, R0–R4 classifier,
   compensation synthesis, durable undo log, escalation policy, `unwind.*` agentic tools.
 - ✅ Works against **real** MCP servers (verified live vs `@modelcontextprotocol/server-filesystem`).
-- ✅ TypeScript stdio shim in `ts/` (`rollback-mcp` on npm), 51 tests passing.
+- ✅ TypeScript stdio shim in `ts/` (built from source; **not published to
+  npm** — PyPI-only distribution decision, 2026-09-01), 51 tests passing.
 - ✅ ReversiBench (`bench/`) + 5-family eval harness (`eval/`) with hand-computed fixtures.
 - ✅ Full CI/CD: lint/type/test matrix (3 OS × 3 Py), mandatory conformance gate,
-  CodeQL, Docker→GHCR, release, PyPI/npm (OIDC), docs, SBOM, signing — all wired.
+  CodeQL, Docker→GHCR, release, PyPI (OIDC), docs, SBOM, signing — all wired.
+  (`npm-publish.yml` exists but is `workflow_dispatch`-only, not wired to
+  tags — see §1.)
 - ✅ MkDocs-Material docs site (builds `--strict`), demo SVG, community-health files.
 - ✅ 300+ tests green; ruff + black + mypy --strict clean.
 - ✅ Research paper scaffolded in `paper/` and **hard-gitignored** (never committed).
@@ -55,11 +58,12 @@ amd64-only except on tags, moved Benchmark to PR-only, set Dependabot to monthly
 - [ ] **PyPI Trusted Publisher**: create the `rollback-mcp` project on PyPI → *Publishing* →
       add a GitHub trusted publisher: owner `bhaskargurram-ai`, repo `unwind`,
       workflow `pypi-publish.yml`. No token needed (OIDC).
-- [ ] **npm**: npm Trusted Publishing (OIDC) is now GA — `npm-publish.yml` is already
-      wired for it (see the ONE-TIME SETUP comment at the top of that file). The first
-      publish of the brand-new `rollback-mcp` package may still need a one-time
-      `NPM_TOKEN` repo secret (npm's docs don't confirm OIDC works before the package
-      exists); delete that secret once the trusted publisher is configured.
+- [x] **npm**: NOT enabled. Bhaskar decided (2026-09-01) to publish to PyPI
+      only — npm distribution is out of scope. `npm-publish.yml` is retained,
+      `workflow_dispatch`-only (no tag trigger), for a possible future manual
+      run. If that changes, set up an npm Trusted Publisher or a one-time
+      `NPM_TOKEN` on npmjs.com first — see the ONE-TIME SETUP comment at the
+      top of that file.
 - [ ] **Codecov**: link the repo at codecov.io (public repos need no token; else add `CODECOV_TOKEN`).
 - [ ] **Discord**: create a server + invite; replace the `TBD` invite link in
       `README.md`, `SUPPORT.md`, `docs/`.
@@ -88,7 +92,8 @@ amd64-only except on tags, moved Benchmark to PR-only, set Dependabot to monthly
       revert of the pre-launch guard), **or** just run the Release workflow manually once.
 - [ ] The `v0.1.0` tag already exists (auto-created). Deleting + re-cutting it after
       Trusted Publishing is configured will publish to PyPI; or bump to `v0.1.1`.
-- [ ] Verify the PyPI + npm + GHCR artifacts published and the Sigstore signatures attached.
+- [ ] Verify the PyPI + GHCR artifacts published and the Sigstore signatures
+      attached. (npm publishing is out of scope — see §1.)
 
 ## 4. Announce
 - [ ] Post the drafts in `docs/launch/` (Show HN, Reddit r/LocalLLaMA + r/mcp, X thread).

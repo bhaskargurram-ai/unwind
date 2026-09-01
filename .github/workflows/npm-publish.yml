@@ -1,9 +1,12 @@
 name: Publish to npm
 
+# npm publishing is deliberately NOT wired up to releases (Bhaskar's decision,
+# 2026-09-01): the project publishes to PyPI only. This workflow is retained,
+# manual-trigger-only, in case that changes later. Whoever enables it must
+# first set up either an npm Trusted Publisher or a one-time NPM_TOKEN on
+# npmjs.com — see the ONE-TIME SETUP comment below.
+
 on:
-  push:
-    tags:
-      - "v*"
   workflow_dispatch:
 
 permissions:

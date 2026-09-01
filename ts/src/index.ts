@@ -4,7 +4,8 @@
  * This mirrors the Python reference implementation's stdio proxy. The Python
  * package remains authoritative for classification, compensation synthesis and
  * the undo log; this shim ports only the transparent stdio proxy so the Node
- * MCP-client audience can `npm i -g rollback-mcp`.
+ * MCP-client audience can build and run it from source (not published to
+ * npm — see `ts/README.md`).
  */
 export { VERSION } from "./version.js";
 export { StdioProxy } from "./proxy.js";

@@ -45,4 +45,6 @@ jobs:
           # Computes the next version from Conventional Commits, updates
           # CHANGELOG.md and the version in pyproject.toml / __init__.py / ts,
           # commits, tags v<version>, and creates the GitHub release.
-          # The v* tag then triggers pypi-publish / npm-publish / docker / sbom / sign.
+          # The v* tag then triggers pypi-publish / docker / sbom / sign.
+          # (npm-publish.yml is intentionally NOT tag-triggered — PyPI-only
+          # distribution decision, 2026-09-01; see that workflow's header.)

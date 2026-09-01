@@ -42,10 +42,13 @@ That last line is the whole thesis in one screenshot, and it is honest: the emai
     uvx rollback-mcp run -- npx -y @modelcontextprotocol/server-filesystem /work
     ```
 
-=== "npm (stdio shim)"
+=== "TypeScript shim (from source)"
+
+    Not published to npm. Clone and build the shim in `ts/`:
 
     ```bash
-    npm install -g rollback-mcp
+    git clone https://github.com/bhaskargurram-ai/unwind && cd unwind/ts
+    npm install && npm run build
     ```
 
 === "docker"

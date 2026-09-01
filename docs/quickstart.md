@@ -28,11 +28,16 @@ Get Unwind wrapping a real MCP server, run the demo, and take an action back —
     uvx rollback-mcp --version
     ```
 
-=== "npm (Node stdio shim)"
+=== "TypeScript shim (build from source)"
+
+    Not published to npm. Clone and build the shim in `ts/`:
 
     ```bash
-    npm install -g rollback-mcp
-    unwind --version
+    git clone https://github.com/bhaskargurram-ai/unwind
+    cd unwind/ts
+    npm install
+    npm run build
+    node dist/cli.js --help
     ```
 
 === "docker"

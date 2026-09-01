@@ -37,7 +37,7 @@ make demo      # run the 20-second demo
 
 ## Git workflow
 
-Trunk-based. Branch from `main` as `feat/<module>`, open a PR, squash-merge. Semantic-version tags trigger the PyPI/npm/GHCR publish. **Never commit crawled server data, credentials, or sandbox state** — commit the crawlers and content hashes only.
+Trunk-based. Branch from `main` as `feat/<module>`, open a PR, squash-merge. Semantic-version tags trigger the PyPI/GHCR publish (the TypeScript shim in `ts/` is built from source and is not published to npm). **Never commit crawled server data, credentials, or sandbox state** — commit the crawlers and content hashes only.
 
 ## The golden rules (read before proposing a design change)
 

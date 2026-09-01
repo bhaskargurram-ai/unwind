@@ -86,7 +86,7 @@ body:
       options:
         - pip (rollback-mcp)
         - uvx
-        - npm (rollback-mcp)
+        - npm (not published — built ts/ from source)
         - Docker (ghcr.io/bhaskargurram-ai/unwind)
         - from source
     validations:

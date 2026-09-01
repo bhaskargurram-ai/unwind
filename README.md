@@ -9,7 +9,6 @@
 [![CI](https://github.com/bhaskargurram-ai/unwind/actions/workflows/ci.yml/badge.svg)](https://github.com/bhaskargurram-ai/unwind/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/bhaskargurram-ai/unwind/branch/main/graph/badge.svg)](https://codecov.io/gh/bhaskargurram-ai/unwind)
 [![PyPI](https://img.shields.io/pypi/v/rollback-mcp?logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/rollback-mcp/)
-[![npm](https://img.shields.io/npm/v/rollback-mcp?logo=npm&label=npm)](https://www.npmjs.com/package/rollback-mcp)
 [![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/bhaskargurram-ai/unwind/badge)](https://securityscorecards.dev/viewer/?uri=github.com/bhaskargurram-ai/unwind)
@@ -72,8 +71,16 @@ Three actions come back. The fourth is flagged honestly — because a false undo
 ```bash
 pip install rollback-mcp        # pip
 uvx rollback-mcp --help         # zero-install, via uv
-npm i -g rollback-mcp           # Node / TypeScript stdio shim
 docker run ghcr.io/bhaskargurram-ai/unwind --help
+```
+
+The Node/TypeScript stdio shim (`ts/`) is real and tested, but it is **not published to
+npm**. Build and run it from source:
+
+```bash
+git clone https://github.com/bhaskargurram-ai/unwind && cd unwind/ts
+npm install && npm run build
+node dist/cli.js run -- npx -y @modelcontextprotocol/server-filesystem /work
 ```
 
 Then wrap any upstream MCP server by prefixing its launch command with `unwind run --`:

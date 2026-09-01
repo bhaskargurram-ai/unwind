@@ -58,12 +58,14 @@ know when the fix ships. We do not currently operate a paid bug-bounty program.
 
 Releases are engineered to be verifiable end to end:
 
-- **Sigstore keyless signing.** Release artifacts (Python and npm distributions) are
+- **Sigstore keyless signing.** Release artifacts (Python distributions) are
   signed with [Sigstore](https://www.sigstore.dev/)/cosign; signatures (`.sig` /
   bundle) are attached to each GitHub release.
 - **PyPI Trusted Publishing (OIDC).** The PyPI package `rollback-mcp` is published via
   GitHub OIDC with no long-lived token — provenance is attested by the workflow.
-- **npm provenance.** The npm package is published with `--provenance`.
+- **npm: not published.** The TypeScript stdio shim in `ts/` is distributed as
+  source only; it is not published to npm, so no npm package or provenance
+  attestation exists for it.
 - **SBOM.** A CycloneDX Software Bill of Materials is generated and attached to each
   tagged release.
 

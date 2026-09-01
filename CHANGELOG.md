@@ -6,11 +6,11 @@
 ### Chores
 
 - **BREAKING (distribution only)**: renamed the published package from
-  `unwind-mcp` to `rollback-mcp` on both PyPI and npm. The name `unwind-mcp`
-  collided with an unrelated, unaffiliated project already published on PyPI
-  (a different author, AGPL-3.0, published March 2026); it was never
-  registered by this project. `rollback-mcp` was confirmed free on PyPI, npm,
-  and GitHub before adoption.
+  `unwind-mcp` to `rollback-mcp` on PyPI. The name `unwind-mcp` collided with
+  an unrelated, unaffiliated project already published on PyPI (a different
+  author, AGPL-3.0, published March 2026); it was never registered by this
+  project. `rollback-mcp` was confirmed free on PyPI and GitHub before
+  adoption.
 
   The Python import path (`import unwind`), the console script (`unwind`),
   the project/product name "Unwind", the repository, and the
@@ -19,7 +19,11 @@
 
   - `pip install unwind-mcp` -> `pip install rollback-mcp`
   - `uvx unwind-mcp` -> `uvx rollback-mcp`
-  - `npm i -g unwind-mcp` -> `npm i -g rollback-mcp`
+
+  The TypeScript stdio shim in `ts/` was renamed to `rollback-mcp` in-repo
+  (`ts/package.json`) for consistency, but it is **not published to npm** —
+  distribution is PyPI-only. Build the shim from source: `cd ts && npm
+  install && npm run build`.
 
 
 ## v0.1.0 (2026-07-24)
