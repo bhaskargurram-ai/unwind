@@ -64,4 +64,4 @@ You don't have to take them on assertion. Fidelity comes from a **live sandbox**
 
 ## Does it work on Windows?
 
-The **core library** (classification, compensation synthesis, the undo log, the eval harness) is cross-platform. The **stdio proxy transport** is currently POSIX-only — it uses asyncio pipe transports that the Windows Proactor event loop does not implement. On Windows, run Unwind under **WSL**, or use the **HTTP proxy mode**. Native Windows stdio (via a thread-backed reader) is tracked as future work.
+Yes. The **core library** (classification, compensation synthesis, the undo log, the eval harness) is cross-platform, and so is the **stdio proxy transport**: `unwind run -- <server>` works natively on Windows. POSIX uses asyncio pipe transports; the Windows Proactor event loop does not implement those for inherited pipe handles, so on Windows the proxy reads and writes its own stdio through thread-backed adapters with the same line-based behaviour. The **HTTP proxy mode** and **WSL** work as before.

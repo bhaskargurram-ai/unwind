@@ -107,6 +107,10 @@ class StdioProxy:
         await asyncio.wait({c2s, s2c}, return_when=asyncio.FIRST_COMPLETED)
         for t in (c2s, s2c):
             t.cancel()
+        # When the client closes its end first, close the upstream's stdin so it
+        # sees end of input and exits. Without this the wait below never returns.
+        if self._proc.returncode is None and self._proc.stdin and not self._proc.stdin.is_closing():
+            self._proc.stdin.close()
         rc = await self._proc.wait()
         return rc
 
@@ -159,21 +163,43 @@ async def _write_frame(writer: asyncio.StreamWriter, frame: Json) -> None:
     await writer.drain()
 
 
-async def _stdio_streams() -> tuple[asyncio.StreamReader, asyncio.StreamWriter]:
-    """Wrap process stdin/stdout as asyncio streams.
+class _ThreadReader:
+    """Line reader over a blocking binary stream, for platforms without async pipes.
 
-    DECISION: this uses ``connect_read_pipe``/``connect_write_pipe``, which the
-    Windows Proactor event loop does not implement for arbitrary pipes. The core
-    library is cross-platform; only the *stdio transport* is POSIX-only for now.
-    Windows users can run under WSL, or use the HTTP mode. A thread-backed reader
-    for native Windows stdio is tracked as future work.
+    Each ``readline`` runs in a worker thread, so the event loop stays free while
+    the client is quiet. End of input returns ``b""`` like ``StreamReader``.
     """
-    if sys.platform == "win32":  # pragma: no cover - platform-specific guard
-        raise RuntimeError(
-            "The Unwind stdio proxy transport is not yet supported natively on "
-            "Windows (asyncio pipe limitation). Run under WSL, or use the HTTP "
-            "proxy mode. See docs/faq for details."
-        )
+
+    def __init__(self, stream: Any) -> None:
+        self._stream = stream
+
+    async def readline(self) -> bytes:
+        return await asyncio.to_thread(self._stream.readline)
+
+
+class _ThreadWriter:
+    """Writer over a blocking binary stream with the ``write``/``drain`` pair the pump uses."""
+
+    def __init__(self, stream: Any) -> None:
+        self._stream = stream
+
+    def write(self, data: bytes) -> None:
+        self._stream.write(data)
+
+    async def drain(self) -> None:
+        await asyncio.to_thread(self._stream.flush)
+
+
+async def _stdio_streams() -> tuple[Any, Any]:
+    """Wrap process stdin/stdout as stream-like objects for the pump.
+
+    POSIX uses ``connect_read_pipe``/``connect_write_pipe``. The Windows Proactor
+    event loop does not implement those for inherited pipe handles, so Windows uses
+    thread-backed adapters over the binary stdio buffers instead. Both forms give
+    the pump the same ``readline`` / ``write`` / ``drain`` surface.
+    """
+    if sys.platform == "win32":
+        return _ThreadReader(sys.stdin.buffer), _ThreadWriter(sys.stdout.buffer)
     loop = asyncio.get_running_loop()
     reader = asyncio.StreamReader()
     protocol = asyncio.StreamReaderProtocol(reader)
