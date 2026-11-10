@@ -25,10 +25,10 @@ import pytest
 pytestmark = [
     pytest.mark.integration,
     pytest.mark.skipif(shutil.which("npx") is None, reason="npx/Node not available"),
-    pytest.mark.skipif(sys.platform == "win32", reason="stdio proxy transport is POSIX-only"),
 ]
 
-SERVER = ["npx", "-y", "@modelcontextprotocol/server-filesystem"]
+# Resolve the launcher: on Windows it is ``npx.cmd``, which CreateProcess will not find by bare name.
+SERVER = [shutil.which("npx") or "npx", "-y", "@modelcontextprotocol/server-filesystem"]
 
 
 class _Proxy:

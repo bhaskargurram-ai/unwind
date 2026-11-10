@@ -24,17 +24,10 @@ from pathlib import Path
 
 import pytest
 
-# The stdio proxy uses asyncio pipe transports on the process's own stdin/stdout,
-# which the Windows Proactor loop does not implement (connect_read_pipe). The
-# core library is cross-platform; only the *stdio transport* is POSIX-only for
-# now (Windows stdio support is tracked as future work). Skip the subprocess
-# conformance run on Windows rather than fail CI on a documented limitation.
-pytestmark = [
-    pytest.mark.protocol,
-    pytest.mark.skipif(
-        sys.platform == "win32", reason="stdio proxy transport is POSIX-only for now"
-    ),
-]
+# Runs on every platform. POSIX uses asyncio pipe transports on the process's own
+# stdin/stdout; Windows, whose Proactor loop has no connect_read_pipe for
+# inherited handles, uses the thread-backed adapters in ``passthrough.py``.
+pytestmark = [pytest.mark.protocol]
 
 FAKE = str(Path(__file__).parent / "fake_server.py")
 
